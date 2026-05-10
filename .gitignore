@@ -1,0 +1,18 @@
+# Virtual environments
+venv/
+.venv/
+env/
+.env_dir/
+
+__pycache__/
+*.pyc
+.env
+*.egg-info/
+dist/
+build/
+.DS_Store
+
+# random_forest.pkl is 84MB — excluded from GitHub (exceeds recommended limit)
+# Run `python train_model.py` once after cloning to regenerate it locally.
+# All other model files (xgboost, scaler, metrics etc.) are tracked.
+models/random_forest.pkl
