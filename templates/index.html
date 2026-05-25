@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FCD34D'/%3E%3Cstop offset='1' stop-color='%23F59E0B'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='18' fill='url(%23g)'/%3E%3Cpath d='M50 8v14m0 56v14M8 50h14m56 0h14M20 20l10 10m40 40l10 10M20 80l10-10m40-40l10-10' stroke='url(%23g)' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+  <title>SolarNet Pro — AI Solar Radiation Prediction | NBKRIST CSE</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@400;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link  rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css?v=10"/>
+  <style>
+    .leaflet-control-attribution{display:none}
+    .leaflet-control-zoom a{background:rgba(30,41,59,.95)!important;color:#F59E0B!important;border-color:rgba(245,158,11,.3)!important}
+    .leaflet-popup-content-wrapper{background:rgba(30,41,59,.97);color:#e2e8f8;border:1px solid rgba(245,158,11,.25);border-radius:12px;font-family:'Space Mono',monospace;font-size:.78rem}
+    .leaflet-popup-tip{background:rgba(30,41,59,.97)}
+    .leaflet-tile { filter: invert(100%) hue-rotate(180deg) sepia(5%) brightness(90%) contrast(1.15) !important; }
+    
+    /* Applications & Insights UI */
+    .apps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+    .app-card { background: rgba(30,41,59,0.5); border: 1px solid rgba(255,255,255,0.06); padding: 18px; border-radius: 12px; display: flex; align-items: flex-start; gap: 14px; transition: transform 0.2s, background 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .app-card:hover { transform: translateY(-3px); background: rgba(30,41,59,0.8); border-color: rgba(245,158,11,0.3); }
+    .app-icon { font-size: 1.6rem; background: rgba(255,255,255,0.05); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; flex-shrink: 0; }
+    .app-title { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: #E2E8F0; font-weight: 700; margin-bottom: 6px; }
+    .app-desc { font-size: 0.8rem; color: #94A3B8; line-height: 1.5; }
+    
+    .insight-box { margin-top: 20px; padding: 14px 18px; background: rgba(16, 185, 129, 0.08); border-left: 4px solid #10B981; border-radius: 8px; display: flex; gap: 12px; align-items: center; transition: all 0.3s ease; }
+    .insight-icon { font-size: 1.5rem; }
+    .insight-text { font-size: 0.85rem; color: #E2E8F0; line-height: 1.5; }
+    .insight-text strong { color: #10B981; font-weight: 600; }
+    
+    .info-icon { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); align-items: center; justify-content: center; font-size: 11px; font-weight: bold; font-family: sans-serif; color: #CBD5E1; cursor: pointer; margin-left: 8px; vertical-align: super; transition: 0.2s; }
+    .info-icon:hover { background: #F59E0B; color: #000; border-color: #F59E0B; }
+  </style>
+</head>
+<body>
+
+<!-- Ambient background glows -->
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+<div class="glow g3"></div>
+<div class="bg-stars"></div>
+
+<div class="page">
+
+  <!-- ══════════════════════ HEADER ══════════════════════ -->
+  <header>
+    <div class="logo">
+      <div class="sun-orb">
+        <div class="sun-ring r1"></div>
+        <div class="sun-ring r2"></div>
+        <div class="sun-core"></div>
+        <svg viewBox="0 0 100 100" class="core-svg">
+          <defs>
+            <radialGradient id="sun-grad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FFFFFF" />
+              <stop offset="25%" stop-color="#FEF08A" />
+              <stop offset="60%" stop-color="#FDE047" />
+              <stop offset="85%" stop-color="#EAB308" />
+              <stop offset="100%" stop-color="#CA8A04" stop-opacity="0" />
+            </radialGradient>
+            <radialGradient id="sun-flare" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FACC15" stop-opacity="0.9" />
+              <stop offset="70%" stop-color="#EAB308" stop-opacity="0.5" />
+              <stop offset="100%" stop-color="#CA8A04" stop-opacity="0" />
+            </radialGradient>
+            <filter id="real-blur" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="4" />
+            </filter>
+            <filter id="heavy-blur" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="6" />
+            </filter>
+          </defs>
+          <g class="sun-flares">
+            <path d="M50 2 L58 32 L88 15 L68 42 L98 50 L68 58 L88 85 L58 68 L50 98 L42 68 L12 85 L32 58 L2 50 L32 42 L12 15 L42 32 Z" fill="url(#sun-flare)" filter="url(#heavy-blur)" opacity="0.7"/>
+            <ellipse cx="50" cy="50" rx="42" ry="28" fill="url(#sun-flare)" filter="url(#real-blur)" opacity="0.6" transform="rotate(45 50 50)"/>
+            <ellipse cx="50" cy="50" rx="28" ry="42" fill="url(#sun-flare)" filter="url(#real-blur)" opacity="0.6" transform="rotate(-45 50 50)"/>
+          </g>
+          <circle cx="50" cy="50" r="28" fill="url(#sun-grad)" />
+          <circle cx="50" cy="50" r="16" fill="#FFFFFF" opacity="0.7" filter="url(#real-blur)" />
+        </svg>
+      </div>
+      <div class="logo-text">
+        <div class="logo-name">Solar<span class="acc">Net</span><span class="pro-badge">PRO</span></div>
+        <div class="logo-sub">AI Radiation Intelligence System · NBKRIST CSE</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="live-pill"><i class="live-blink"></i>LIVE</div>
+      <div class="clock-box">
+        <div class="clock-label">LOCAL TIME</div>
+        <div class="clock" id="live-clock">00:00:00</div>
+      </div>
+      <button class="btn-ghost" id="auto-refresh-btn" onclick="toggleAutoRefresh()">
+        🔄 Auto-Refresh: <span id="ar-status">OFF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ══════════════════════ HERO ══════════════════════ -->
+  <section class="hero">
+    <div class="hero-pill">
+      <span class="pill-spark">✦</span>
+      AI-Powered &nbsp;·&nbsp; Real-Time Forecast &nbsp;·&nbsp; pvlib Solar Geometry &nbsp;·&nbsp; NASA POWER
+    </div>
+    <h1><span class="heading-upper">S</span><span class="sun-o">o</span><span class="heading-upper">lar Radiation</span><br/><span class="g-text">Prediction System</span></h1>
+    <p class="hero-p">
+      Dual ML ensemble (Random Forest + XGBoost) trained on 32,000+ meteorological records.
+      Live weather via Open-Meteo · satellite validation via NASA POWER.
+    </p>
+    <div class="hero-stats">
+      <div class="hs-item">
+        <div class="hs-num gold">32K+</div>
+        <div class="hs-lbl">Training Records</div>
+      </div>
+      <div class="hs-sep"></div>
+      <div class="hs-item">
+        <div class="hs-num cyan">2</div>
+        <div class="hs-lbl">ML Models</div>
+      </div>
+      <div class="hs-sep"></div>
+      <div class="hs-item">
+        <div class="hs-num violet">24h</div>
+        <div class="hs-lbl">Hourly Forecast</div>
+      </div>
+      <div class="hs-sep"></div>
+      <div class="hs-item">
+        <div class="hs-num green" id="hero-r2">97%</div>
+        <div class="hs-lbl">Accuracy (R²)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ CITY BAR ══════════════════════ -->
+  <div class="city-bar">
+    <div class="cb-left">
+      <div class="cb-emoji">🌍</div>
+      <div>
+        <div class="cb-title">LIVE CITY WEATHER</div>
+        <div class="cb-hint">Auto-fills all form fields from real-time data</div>
+      </div>
+    </div>
+    <div class="cb-search">
+      <input class="cb-input" type="text" id="city-input" onclick="this.select()"
+             placeholder="Type any city: Nellore, Hyderabad, Chennai, Mumbai…" value="Nellore"/>
+      <button class="btn-primary" id="city-btn" onclick="fetchCity()" style="white-space: nowrap;">⚡ Fetch Weather</button>
+      <button class="btn-outline hidden" id="city-reset" onclick="window.location.reload()" title="Stop API and Return to Default" style="padding: 0 16px; white-space: nowrap;">↩ Back</button>
+    </div>
+    <div class="cb-result hidden" id="lb-result">
+      <div class="cbr-name" id="lb-city">—</div>
+      <div class="cbr-chips">
+        <span class="cbr-chip gold" id="lb-temp-chip"><span id="lb-temp">—</span>°F</span>
+        <span class="cbr-chip cyan" id="lb-hum-chip"><span id="lb-hum">—</span>%</span>
+        <span class="cbr-chip violet"><span id="lb-wind">—</span>mph</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ WEATHER STRIP ══════════════════════ -->
+  <div class="wx-row">
+    <div class="wx-card" id="ws-temp">
+      <div class="wx-ic">🌡️</div>
+      <div class="wx-val">—</div>
+      <div class="wx-lbl">Temperature</div>
+    </div>
+    <div class="wx-card" id="ws-hum">
+      <div class="wx-ic">💧</div>
+      <div class="wx-val">—</div>
+      <div class="wx-lbl">Humidity</div>
+    </div>
+    <div class="wx-card" id="ws-wind">
+      <div class="wx-ic">🌬️</div>
+      <div class="wx-val">—</div>
+      <div class="wx-lbl">Wind Speed</div>
+    </div>
+    <div class="wx-card" id="ws-press">
+      <div class="wx-ic">⏱️</div>
+      <div class="wx-val">—</div>
+      <div class="wx-lbl">Pressure</div>
+    </div>
+    <div class="wx-card" id="ws-dir">
+      <div class="wx-ic">🧭</div>
+      <div class="wx-val">—</div>
+      <div class="wx-lbl">Wind Dir</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ MAIN GRID ══════════════════════ -->
+  <div class="main-grid">
+
+    <!-- ① PREDICT FORM -->
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-tag cyan-tag">INPUT</div>
+        <div class="card-ttl">Predict Solar Radiation</div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>TEMPERATURE (°F)</label>
+          <input type="number" id="temperature" value="50" step="0.1" onclick="this.select()"/>
+        </div>
+        <div class="field">
+          <label>PRESSURE (inHg)</label>
+          <input type="number" id="pressure" value="30.4" step="0.01" onclick="this.select()"/>
+        </div>
+        <div class="field">
+          <label>HUMIDITY (%)</label>
+          <input type="number" id="humidity" value="80" min="0" max="100" onclick="this.select()"/>
+        </div>
+        <div class="field">
+          <label>WIND DIR (°)</label>
+          <input type="number" id="wind_dir" value="120" min="0" max="360" onclick="this.select()"/>
+        </div>
+        <div class="field">
+          <label>WIND SPEED (mph)</label>
+          <input type="number" id="speed" value="5.5" step="0.1" onclick="this.select()"/>
+        </div>
+        <div class="field">
+          <label>HOUR (0–23)</label>
+          <input type="number" id="hour" value="12" min="0" max="23" onclick="this.select()"/>
+        </div>
+        <div class="field">
+          <label>DAY OF MONTH</label>
+          <input type="number" id="day" value="15" min="1" max="31" onclick="this.select()"/>
+        </div>
+        <div class="field">
+          <label>MONTH</label>
+          <select id="month">
+            <option value="1">January</option><option value="2">February</option>
+            <option value="3">March</option><option value="4">April</option>
+            <option value="5">May</option><option value="6" selected>June</option>
+            <option value="7">July</option><option value="8">August</option>
+            <option value="9">September</option><option value="10">October</option>
+            <option value="11">November</option><option value="12">December</option>
+          </select>
+        </div>
+      </div>
+      <div class="err-msg" id="pred-err"></div>
+      <button class="btn-predict" id="pred-btn" onclick="runPredict()">
+        ☀ &nbsp;PREDICT NOW
+      </button>
+    </div>
+
+    <!-- ② RESULTS -->
+    <div class="card results-card">
+      <div class="card-hd">
+        <div class="card-tag gold-tag">OUTPUT</div>
+        <div class="card-ttl">Prediction Results</div>
+      </div>
+      <!-- idle -->
+      <div class="idle-state" id="idle">
+        <div class="idle-orb">
+          <div class="idle-orb-ring"></div>
+          <div class="idle-orb-core">
+            <svg viewBox="0 0 100 100" class="idle-svg">
+              <g class="sun-flares">
+                <path d="M50 2 L58 32 L88 15 L68 42 L98 50 L68 58 L88 85 L58 68 L50 98 L42 68 L12 85 L32 58 L2 50 L32 42 L12 15 L42 32 Z" fill="url(#sun-flare)" filter="url(#heavy-blur)" opacity="0.7"/>
+                <ellipse cx="50" cy="50" rx="42" ry="28" fill="url(#sun-flare)" filter="url(#real-blur)" opacity="0.6" transform="rotate(45 50 50)"/>
+                <ellipse cx="50" cy="50" rx="28" ry="42" fill="url(#sun-flare)" filter="url(#real-blur)" opacity="0.6" transform="rotate(-45 50 50)"/>
+              </g>
+              <circle cx="50" cy="50" r="28" fill="url(#sun-grad)" />
+              <circle cx="50" cy="50" r="16" fill="#FFFFFF" opacity="0.7" filter="url(#real-blur)" />
+            </svg>
+          </div>
+        </div>
+        <div class="idle-msg">Enter weather parameters<br/>and click <strong>PREDICT NOW</strong></div>
+        <div class="idle-hint">Auto-fill using city weather bar above ↑</div>
+      </div>
+      <!-- results -->
+      <div class="results-wrap hidden" id="results-wrap">
+        <div class="res-item res-cyan">
+          <div class="res-model-info">
+            <span class="res-dot cyan-bg"></span>
+            <span class="res-name">RANDOM FOREST</span>
+          </div>
+          <div class="res-right">
+            <span class="res-val cyan" id="val-rf">—</span>
+            <span class="res-unit">W/m²</span>
+          </div>
+        </div>
+        <div class="res-item res-gold res-featured">
+          <div class="res-model-info">
+            <span class="res-dot gold-bg"></span>
+            <span class="res-name">XGBOOST <span class="badge-best">BEST</span></span>
+          </div>
+          <div class="res-right">
+            <span class="res-val gold" id="val-xgb">—</span>
+            <span class="res-unit">W/m²</span>
+          </div>
+        </div>
+        <div class="res-item res-violet">
+          <div class="res-model-info">
+            <span class="res-dot violet-bg"></span>
+            <span class="res-name">ENSEMBLE AVG</span>
+          </div>
+          <div class="res-right">
+            <span class="res-val violet" id="val-ens">—</span>
+            <span class="res-unit">W/m²</span>
+          </div>
+        </div>
+        <!-- Gauge -->
+        <div class="gauge-wrap">
+          <div class="gauge-top">
+            <span class="gauge-label">RADIATION INTENSITY</span>
+            <span class="gauge-pct" id="gauge-pct">0%</span>
+          </div>
+          <div class="gauge-track">
+            <div class="gauge-fill" id="gauge"></div>
+            <div class="gauge-glow" id="gauge-glow"></div>
+          </div>
+          <div class="gauge-scale">
+            <span>0</span><span>350</span><span>700</span><span>1050</span><span>1400 W/m²</span>
+          </div>
+        </div>
+        <div id="radiation-class-wrap"></div>
+        <div class="insight-box hidden" id="single-insight">
+          <div class="insight-icon" id="single-insight-icon">✨</div>
+          <div class="insight-text" id="single-insight-txt"></div>
+        </div>
+
+        <!-- SOLAR PANEL SUITABILITY SCORE -->
+        <div class="suitability-card hidden" id="suitability-card">
+          <div class="suit-header">
+            <span class="suit-icon" id="suit-icon">☀️</span>
+            <div style="flex:1">
+              <div class="suit-title">SOLAR PANEL SUITABILITY</div>
+              <div class="suit-sub" id="suit-label">Calculating...</div>
+            </div>
+            <div class="suit-score-wrap">
+              <div class="suit-score" id="suit-score">0</div>
+              <div class="suit-score-max">/100</div>
+            </div>
+          </div>
+          <div class="suit-bar-track">
+            <div class="suit-bar-fill" id="suit-bar"></div>
+          </div>
+          <div class="suit-details" id="suit-details"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ③ FORECAST CHART -->
+    <div class="card" id="forecast-section">
+      <div class="card-hd">
+        <div class="card-tag violet-tag">FORECAST</div>
+        <div class="card-ttl">24-Hour Solar Irradiance <span class="info-icon" title="Solar radiation predictions calculate the W/m² power potential based on machine learning weather analysis. Perfect for estimating solar panel output!" onclick="alert(this.title)">i</span></div>
+      </div>
+      <div class="loc-row">
+        <div class="field" style="max-width:130px">
+          <label>LATITUDE</label>
+          <input type="number" id="lat" value="14.4426" step="0.0001" onclick="this.select()"/>
+        </div>
+        <div class="field" style="max-width:130px">
+          <label>LONGITUDE</label>
+          <input type="number" id="lon" value="79.9865" step="0.0001" onclick="this.select()"/>
+        </div>
+        <input type="hidden" id="panel_tilt" value="20"/>
+        <input type="hidden" id="panel_azimuth" value="180"/>
+        <input type="hidden" id="panel_efficiency_pct" value="20"/>
+        <button class="btn-analyze" id="analyze-btn" onclick="refreshChart()">
+          📈 Analyze
+        </button>
+      </div>
+      <div class="chart-box">
+        <canvas id="loc-chart"></canvas>
+      </div>
+      <div class="chart-footer" id="chart-footer">
+        Click Analyze to load real-time 24-hour forecast
+      </div>
+      <div class="insight-box hidden" id="graph-insight">
+        <div class="insight-icon">💡</div>
+        <div class="insight-text" id="graph-insight-txt"></div>
+      </div>
+      <div class="err-msg" id="chart-err"></div>
+    </div>
+
+    <!-- ④ MODEL METRICS -->
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-tag green-tag">METRICS</div>
+        <div class="card-ttl">Model Performance</div>
+      </div>
+      <div class="tab-row">
+        <button class="tab active" id="tab-rf"  onclick="switchTab('rf')">Random Forest</button>
+        <button class="tab"        id="tab-xgb" onclick="switchTab('xgb')">XGBoost</button>
+      </div>
+      <div class="tab-panel active" id="panel-rf">
+        <div class="metrics-row">
+          <div class="mbox cyan-box">
+            <div class="mval" id="rf-mae">—</div>
+            <div class="mlbl">MAE (W/m²)</div>
+          </div>
+          <div class="mbox violet-box">
+            <div class="mval" id="rf-rmse">—</div>
+            <div class="mlbl">RMSE</div>
+          </div>
+          <div class="mbox gold-box">
+            <div class="mval" id="rf-r2">—</div>
+            <div class="mlbl">R² Score</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="panel-xgb">
+        <div class="metrics-row">
+          <div class="mbox cyan-box">
+            <div class="mval" id="xgb-mae">—</div>
+            <div class="mlbl">MAE (W/m²)</div>
+          </div>
+          <div class="mbox violet-box">
+            <div class="mval" id="xgb-rmse">—</div>
+            <div class="mlbl">RMSE</div>
+          </div>
+          <div class="mbox gold-box">
+            <div class="mval" id="xgb-r2">—</div>
+            <div class="mlbl">R² Score</div>
+          </div>
+        </div>
+      </div>
+      <div class="fi-sec-label" id="fi-title">Feature Importance — Random Forest</div>
+      <div id="imp-bars">
+        <div class="skel" style="height:9px;width:100%;margin-bottom:11px"></div>
+        <div class="skel" style="height:9px;width:84%;margin-bottom:11px"></div>
+        <div class="skel" style="height:9px;width:68%;margin-bottom:11px"></div>
+        <div class="skel" style="height:9px;width:52%"></div>
+      </div>
+    </div>
+
+  </div><!-- /main-grid -->
+  
+  <!-- ══════════════════════ APPLICATIONS ══════════════════════ -->
+  <div class="section-wrap">
+    <div class="section-head">
+      <div class="sh-icon">💡</div>
+      <div>
+        <div class="sh-title">Real-World Use Cases</div>
+        <div class="sh-sub">Practical applications driven by Machine Learning irradiance forecasting</div>
+      </div>
+    </div>
+    <div class="apps-grid">
+      <div class="app-card">
+        <div class="app-icon">⚡</div>
+        <div class="app-info">
+          <div class="app-title">Solar Power Generation</div>
+          <div class="app-desc">Helps identify peak sunlight hours for maximum energy production.</div>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🔋</div>
+        <div class="app-info">
+          <div class="app-title">Smart Energy Planning</div>
+          <div class="app-desc">Helps optimize electricity usage and reduce dependency on grid.</div>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🌱</div>
+        <div class="app-info">
+          <div class="app-title">Agriculture Optimization</div>
+          <div class="app-desc">Helps farmers plan irrigation and crop exposure perfectly.</div>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🌤</div>
+        <div class="app-info">
+          <div class="app-title">Climate & Weather Analysis</div>
+          <div class="app-desc">Useful for environmental monitoring and precise forecasting.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ MAP ══════════════════════ -->
+  <div class="section-wrap">
+    <div class="section-head">
+      <div class="sh-icon">🗺️</div>
+      <div>
+        <div class="sh-title">Interactive Location Picker</div>
+        <div class="sh-sub">Click or drag the marker anywhere on the map — auto-updates Lat/Lon</div>
+      </div>
+    </div>
+    <div class="card map-card">
+      <div id="location-map"></div>
+      <div class="map-footer">
+        <div class="coord-box">
+          <div class="coord-item">
+            <span class="coord-key">LAT</span>
+            <span class="coord-val" id="map-lat-display">14.4426</span>
+          </div>
+          <div class="coord-sep">·</div>
+          <div class="coord-item">
+            <span class="coord-key">LON</span>
+            <span class="coord-val" id="map-lon-display">79.9865</span>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="document.getElementById('forecast-section').scrollIntoView({behavior: 'smooth', block: 'start'}); refreshChart()">
+          📈 Run Prediction for This Location
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ EXPORT ══════════════════════ -->
+  <div class="export-row">
+    <div class="exp-left">
+      <span class="exp-icon">📄</span>
+      <span class="exp-label">Export Results &amp; Report</span>
+    </div>
+    <div class="exp-btns">
+      <button class="btn-outline" onclick="exportCSV()">📥 Download CSV</button>
+      <button class="btn-outline" onclick="printReport()">🖨️ Print Report</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ FOOTER ══════════════════════ -->
+  <footer>
+    <div class="ft-logo">☀️ <span class="gold">SolarNet Pro</span></div>
+    <div class="ft-desc">
+      AI Solar Radiation Prediction · Random Forest + XGBoost + pvlib · Open-Meteo + NASA POWER
+    </div>
+    <div class="ft-links">
+      <a href="https://open-meteo.com" target="_blank">Open-Meteo</a>
+      <a href="https://power.larc.nasa.gov" target="_blank">NASA POWER</a>
+      <a href="https://pvlib-python.readthedocs.io" target="_blank">pvlib</a>
+      <a href="https://www.kaggle.com/datasets/dronio/SolarEnergy" target="_blank">Kaggle Dataset</a>
+    </div>
+    <div class="ft-college">
+      B.Tech Final Year Project &nbsp;·&nbsp; Dept. of Computer Science &amp; Engineering &nbsp;·&nbsp;
+      <span class="gold">NBKRIST, Vidyanagar</span>
+    </div>
+  </footer>
+
+</div>
+<script src="/static/js/app.js?v=6"></script>
+</body>
+</html>
