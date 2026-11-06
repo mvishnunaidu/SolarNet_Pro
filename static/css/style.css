@@ -365,40 +365,33 @@ header {
 }
 .btn-ghost:hover { border-color: var(--border-gold); color: var(--gold); }
 
-/* Auto-Refresh Control Bar (Compact Previous Structure, Crisp Colors) */
+/* Auto-Refresh Control Bar (Ultra-Modern, Compact Glass Pill) */
 .ar-control-box {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 7px;
   background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 6px;
-  padding: 3px 8px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 100px;
+  padding: 3px 6px 3px 10px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 .ar-control-box.active {
-  border-color: rgba(16, 185, 129, 0.45);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
-}
-.ar-left {
-  display: flex;
-  flex-direction: column;
-}
-.ar-label-row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  border-color: rgba(52, 211, 153, 0.45);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
 }
 .ar-pulse {
   display: inline-block;
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #34D399;
-  box-shadow: 0 0 5px #34D399;
+  box-shadow: 0 0 6px #34D399;
   animation: blink 1.2s infinite;
+  flex-shrink: 0;
 }
 .ar-pulse.off {
   background: #64748B;
@@ -406,65 +399,79 @@ header {
   animation: none;
 }
 .ar-title {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.50rem;
-  color: #94A3B8;
-  letter-spacing: 1.2px;
-  font-weight: 700;
-  text-transform: uppercase;
+  display: none;
 }
 .ar-countdown {
   font-family: 'Space Mono', monospace;
-  font-size: 0.74rem;
-  font-weight: 800;
+  font-size: 0.76rem;
+  font-weight: 700;
   color: #34D399;
-  letter-spacing: 0.5px;
-  min-width: 38px;
-  text-align: right;
+  letter-spacing: 0.4px;
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.45);
+  line-height: 1;
 }
 .ar-countdown.off {
   color: #64748B;
+  text-shadow: none;
+}
+.ar-divider {
+  width: 1px;
+  height: 13px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 1px;
+  flex-shrink: 0;
 }
 .ar-select {
-  background: rgba(11, 18, 32, 0.90);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%2394A3B8' d='M0 0l4 4 4-4z'/%3E%3C/svg%3E") no-repeat right 2px center;
+  border: none;
   color: #F8FAFC;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.64rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  height: 24px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 14px 2px 2px;
+  height: 22px;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.2s;
+  line-height: 22px;
+  transition: color 0.2s;
 }
 .ar-select:hover, .ar-select:focus {
-  border-color: #FBBF24;
+  color: #FBBF24;
 }
 .ar-select option {
-  background: #1E293B;
+  background: #0F172A;
   color: #F8FAFC;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.80rem;
+  padding: 6px 10px;
 }
 .ar-trigger-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
+  background: rgba(251, 191, 36, 0.10);
+  border: 1px solid rgba(251, 191, 36, 0.30);
+  border-radius: 50%;
   color: #FBBF24;
   width: 22px;
   height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.74rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   padding: 0;
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.15);
+  flex-shrink: 0;
 }
 .ar-trigger-btn:hover {
-  background: rgba(234, 179, 8, 0.25);
+  background: rgba(251, 191, 36, 0.25);
   border-color: #FBBF24;
-  transform: rotate(90deg);
+  transform: rotate(180deg) scale(1.08);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.45);
+}
+.ar-trigger-btn svg {
+  display: block;
 }
 
 .info-icon {
