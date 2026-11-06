@@ -17,7 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=28"/>
+  <link rel="stylesheet" href="/static/css/style.css?v=29"/>
   <style>
     .leaflet-control-attribution{display:none}
     .leaflet-control-zoom a{background:rgba(30,41,59,.95)!important;color:#F59E0B!important;border-color:rgba(245,158,11,.3)!important}
@@ -71,10 +71,10 @@
 <div class="glow g3"></div>
 <div class="bg-stars"></div>
 
-<div class="page">
+<div class="page" id="home">
 
   <!-- ══════════════════════ HEADER ══════════════════════ -->
-  <header>
+  <header id="main-header">
     <div class="logo">
       <div class="sun-orb">
         <div class="sun-ring r1"></div>
@@ -128,23 +128,18 @@
 
     <div class="hdr-right">
       <div class="live-pill"><i class="live-blink"></i>LIVE</div>
-      <div class="clock-box">
-        <div class="clock-label">SYSTEM TIME</div>
-        <div class="clock" id="live-clock">00:00:00</div>
+      <div class="clock-box" title="System Live Time">
+        <span class="clock-icon">⏱️</span>
+        <span class="clock" id="live-clock">00:00:00</span>
       </div>
-      <div class="ar-control-box active" id="ar-control-box">
-        <div class="ar-left">
-          <div class="ar-label-row">
-            <span class="ar-pulse" id="ar-pulse-dot"></span>
-            <span class="ar-title">AUTO REFRESH</span>
-            <span class="ar-countdown" id="ar-countdown">05:00</span>
-          </div>
-        </div>
+      <div class="ar-control-box active" id="ar-control-box" title="Auto-Refresh Countdown & Interval">
+        <span class="ar-pulse" id="ar-pulse-dot"></span>
+        <span class="ar-countdown" id="ar-countdown">05:00</span>
         <select id="auto-refresh-select" class="ar-select" onchange="onAutoRefreshChange(this.value)" title="Auto-refresh interval">
-          <option value="2">2 MIN</option>
-          <option value="5" selected>5 MIN</option>
-          <option value="10">10 MIN</option>
-          <option value="0">OFF</option>
+          <option value="2">2m</option>
+          <option value="5" selected>5m</option>
+          <option value="10">10m</option>
+          <option value="0">Off</option>
         </select>
         <button class="ar-trigger-btn" onclick="triggerImmediateRefresh(false)" title="Refresh now">
           ↻
@@ -157,7 +152,7 @@
   </header>
 
   <!-- ══════════════════════ HERO ══════════════════════ -->
-  <section class="hero" id="home">
+  <section class="hero">
     <div class="hero-tag">
       <span class="hero-tag-ic">☀️</span>
       <span>Machine Learning</span>
