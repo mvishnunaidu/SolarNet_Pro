@@ -17,7 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=32"/>
+  <link rel="stylesheet" href="/static/css/style.css?v=33"/>
   <style>
     .leaflet-control-attribution{display:none}
     .leaflet-control-zoom a{background:rgba(30,41,59,.95)!important;color:#F59E0B!important;border-color:rgba(245,158,11,.3)!important}
@@ -265,28 +265,50 @@
 
   <!-- WEATHER STRIP -->
   <div class="wx-row">
-    <div class="wx-card" id="ws-temp">
-      <div class="wx-ic">🌡️</div>
+    <div class="wx-card wx-card-amber" id="ws-temp">
+      <div class="wx-ic-badge ic-amber">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+        </svg>
+      </div>
       <div class="wx-val">—</div>
       <div class="wx-lbl">Temperature</div>
     </div>
-    <div class="wx-card" id="ws-hum">
-      <div class="wx-ic">💧</div>
+    <div class="wx-card wx-card-cyan" id="ws-hum">
+      <div class="wx-ic-badge ic-cyan">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+        </svg>
+      </div>
       <div class="wx-val">—</div>
       <div class="wx-lbl">Humidity</div>
     </div>
-    <div class="wx-card" id="ws-wind">
-      <div class="wx-ic">🌬️</div>
+    <div class="wx-card wx-card-emerald" id="ws-wind">
+      <div class="wx-ic-badge ic-emerald">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path>
+        </svg>
+      </div>
       <div class="wx-val">—</div>
       <div class="wx-lbl">Wind Speed</div>
     </div>
-    <div class="wx-card" id="ws-press">
-      <div class="wx-ic">⏱️</div>
+    <div class="wx-card wx-card-violet" id="ws-press">
+      <div class="wx-ic-badge ic-violet">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 6v6l4 2"></path>
+        </svg>
+      </div>
       <div class="wx-val">—</div>
       <div class="wx-lbl">Pressure</div>
     </div>
-    <div class="wx-card" id="ws-dir">
-      <div class="wx-ic">🧭</div>
+    <div class="wx-card wx-card-rose" id="ws-dir">
+      <div class="wx-ic-badge ic-rose">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+        </svg>
+      </div>
       <div class="wx-val">—</div>
       <div class="wx-lbl">Wind Dir</div>
     </div>

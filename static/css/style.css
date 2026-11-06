@@ -742,71 +742,94 @@ header {
 .cb-input-container {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(11, 18, 32, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  gap: 10px;
+  background: rgba(11, 18, 32, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
   padding: 8px 14px;
   flex: 1;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) inset;
 }
 .cb-input-container:focus-within {
   border-color: #FBBF24;
-  box-shadow: 0 0 14px rgba(251, 191, 36, 0.2);
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.3), 0 2px 6px rgba(0, 0, 0, 0.25) inset;
 }
-.cb-pin { font-size: 0.90rem; }
+.cb-pin {
+  font-size: 0.95rem;
+  filter: drop-shadow(0 0 4px rgba(244, 63, 94, 0.5));
+}
 .cb-input-box {
-  background: transparent;
+  background: transparent !important;
   border: none;
-  color: #F8FAFC;
-  font-size: 0.84rem;
+  color: #F8FAFC !important;
+  font-size: 0.88rem;
+  font-weight: 500;
   outline: none;
   width: 100%;
   font-family: 'Inter', sans-serif;
 }
+.cb-input-box::placeholder {
+  color: #64748B;
+}
+
+/* Chrome/Edge autofill prevention of white background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0B1220 inset !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  caret-color: #F8FAFC !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .btn-fetch-accent {
-  background: #FBBF24;
-  color: #0B1220;
+  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+  color: #070D18;
   font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 0.80rem;
-  padding: 10px 20px;
-  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  padding: 10px 22px;
+  border-radius: 9px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.40);
+  transition: all 0.22s ease;
   white-space: nowrap;
 }
 .btn-fetch-accent:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.55);
-  background: #FDE047;
+  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.60);
+  background: linear-gradient(135deg, #FDE047 0%, #FBBF24 100%);
 }
 
 .cb-result-box {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 .cbr-name {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 800;
-  color: var(--cyan);
+  color: #38BDF8;
   white-space: nowrap;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.45);
 }
 .cbr-chips { display: flex; gap: 8px; }
 .cbr-chip {
-  padding: 4px 10px; border-radius: 100px; font-family: 'Space Mono', monospace;
-  font-size: 0.7rem; font-weight: 700; border: 1px solid;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.70rem;
+  font-weight: 700;
+  border: 1px solid;
+  letter-spacing: 0.3px;
 }
-.cbr-chip.gold   { color: var(--gold);   background: var(--gold-dim);   border-color: var(--border-gold); }
-.cbr-chip.cyan   { color: var(--cyan);   background: var(--cyan-dim);   border-color: var(--border-cyan); }
-.cbr-chip.violet { color: var(--violet); background: var(--violet-dim); border-color: var(--border-violet); }
-.cbr-chip.gold   { color: var(--gold);   background: var(--gold-dim);   border-color: var(--border-gold); }
-.cbr-chip.cyan   { color: var(--cyan);   background: var(--cyan-dim);   border-color: var(--border-cyan); }
-.cbr-chip.violet { color: var(--violet); background: var(--violet-dim); border-color: var(--border-violet); }
+.cbr-chip.gold   { color: #FBBF24; background: rgba(251, 191, 36, 0.14); border-color: rgba(251, 191, 36, 0.45); box-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
+.cbr-chip.cyan   { color: #38BDF8; background: rgba(14, 165, 233, 0.14); border-color: rgba(56, 189, 248, 0.45); box-shadow: 0 0 10px rgba(14, 165, 233, 0.2); }
+.cbr-chip.violet { color: #A78BFA; background: rgba(124, 58, 237, 0.16); border-color: rgba(167, 139, 250, 0.45); box-shadow: 0 0 10px rgba(124, 58, 237, 0.2); }
 
 /* ════════════════════════════════
    BUTTONS
@@ -846,22 +869,181 @@ header {
 .btn-predict:hover { transform: translateY(-2px); box-shadow: 0 4px 30px rgba(245,158,11,0.55); }
 
 /* ════════════════════════════════
-   WEATHER STRIP
+   WEATHER STRIP (VIBRANT THEMED COLORS & SLEEK GLASS)
    ════════════════════════════════ */
 .wx-row {
-  display: grid; grid-template-columns: repeat(5, 1fr);
-  gap: 14px; margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
 }
+
 .wx-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--rad);
-  padding: 22px 16px; text-align: center; transition: var(--tran);
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: rgba(13, 21, 38, 0.70);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  padding: 18px 14px 16px;
+  text-align: center;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   min-width: 0;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(255, 255, 255, 0.05) inset;
+  position: relative;
+  overflow: hidden;
 }
-.wx-card:hover { border-color: var(--border-cyan); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(34,211,238,0.1); }
-.wx-ic  { font-size: 2rem; }
-.wx-val { font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 800; color: var(--cyan); }
-.wx-lbl { font-size: 0.57rem; color: var(--muted2); letter-spacing: 2px; text-transform: uppercase; }
+
+.wx-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0.8;
+  transition: opacity 0.25s ease;
+}
+
+.wx-card:hover {
+  transform: translateY(-4px);
+}
+.wx-card:hover::before {
+  opacity: 1;
+  height: 3px;
+}
+
+/* Badge Icons */
+.wx-ic-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+.wx-card:hover .wx-ic-badge {
+  transform: scale(1.08);
+}
+.wx-ic-badge svg {
+  display: block;
+}
+
+.wx-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.3px;
+}
+
+.wx-lbl {
+  font-size: 0.62rem;
+  color: #94A3B8;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+}
+
+/* 1. Amber / Gold Theme (Temperature) */
+.wx-card-amber::before {
+  background: linear-gradient(90deg, transparent, #FBBF24, transparent);
+}
+.wx-card-amber:hover {
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 12px 30px -4px rgba(251, 191, 36, 0.22), 0 0 1px 1px rgba(251, 191, 36, 0.15) inset;
+}
+.ic-amber {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #FBBF24;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.25);
+}
+.wx-card-amber .wx-val {
+  color: #FBBF24;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.35);
+}
+
+/* 2. Cyan Theme (Humidity) */
+.wx-card-cyan::before {
+  background: linear-gradient(90deg, transparent, #38BDF8, transparent);
+}
+.wx-card-cyan:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 12px 30px -4px rgba(56, 189, 248, 0.22), 0 0 1px 1px rgba(56, 189, 248, 0.15) inset;
+}
+.ic-cyan {
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38BDF8;
+  box-shadow: 0 0 16px rgba(14, 165, 233, 0.25);
+}
+.wx-card-cyan .wx-val {
+  color: #38BDF8;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+}
+
+/* 3. Emerald Theme (Wind Speed) */
+.wx-card-emerald::before {
+  background: linear-gradient(90deg, transparent, #34D399, transparent);
+}
+.wx-card-emerald:hover {
+  border-color: rgba(52, 211, 153, 0.4);
+  box-shadow: 0 12px 30px -4px rgba(52, 211, 153, 0.22), 0 0 1px 1px rgba(52, 211, 153, 0.15) inset;
+}
+.ic-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #34D399;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+}
+.wx-card-emerald .wx-val {
+  color: #34D399;
+  text-shadow: 0 0 12px rgba(52, 211, 153, 0.35);
+}
+
+/* 4. Violet Theme (Pressure) */
+.wx-card-violet::before {
+  background: linear-gradient(90deg, transparent, #A78BFA, transparent);
+}
+.wx-card-violet:hover {
+  border-color: rgba(167, 139, 250, 0.4);
+  box-shadow: 0 12px 30px -4px rgba(167, 139, 250, 0.22), 0 0 1px 1px rgba(167, 139, 250, 0.15) inset;
+}
+.ic-violet {
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  color: #A78BFA;
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.25);
+}
+.wx-card-violet .wx-val {
+  color: #A78BFA;
+  text-shadow: 0 0 12px rgba(167, 139, 250, 0.35);
+}
+
+/* 5. Rose Theme (Wind Direction) */
+.wx-card-rose::before {
+  background: linear-gradient(90deg, transparent, #FB7185, transparent);
+}
+.wx-card-rose:hover {
+  border-color: rgba(251, 113, 133, 0.4);
+  box-shadow: 0 12px 30px -4px rgba(251, 113, 133, 0.22), 0 0 1px 1px rgba(251, 113, 133, 0.15) inset;
+}
+.ic-rose {
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(251, 113, 133, 0.35);
+  color: #FB7185;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.25);
+}
+.wx-card-rose .wx-val {
+  color: #FB7185;
+  text-shadow: 0 0 12px rgba(251, 113, 133, 0.35);
+}
 
 /* ════════════════════════════════
    MAIN GRID & CARDS
