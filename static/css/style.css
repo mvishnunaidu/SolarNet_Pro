@@ -51,7 +51,8 @@
 
 *, *::before, *::after {
   box-sizing: border-box;
-  margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
 html {
@@ -62,26 +63,19 @@ html {
 body {
   background-color: #070D18;
   background-image: 
-    radial-gradient(circle at 18% 22%, rgba(245, 158, 11, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 82% 70%, rgba(14, 165, 233, 0.10) 0%, transparent 50%),
-    linear-gradient(135deg, rgba(11, 18, 32, 0.50) 0%, rgba(11, 18, 32, 0.82) 100%),
-    url('/static/images/earth-theme.jpg'),
+    radial-gradient(circle at 50% 5%, rgba(14, 165, 233, 0.15) 0%, transparent 55%),
+    radial-gradient(circle at 12% 18%, rgba(245, 158, 11, 0.10) 0%, transparent 40%),
+    linear-gradient(180deg, rgba(7, 13, 24, 0.48) 0%, rgba(7, 13, 24, 0.75) 35%, rgba(7, 13, 24, 0.92) 80%, #070D18 100%),
     url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2500&auto=format&fit=crop');
   background-size: cover;
-  background-position: center;
+  background-position: center top;
   background-attachment: fixed;
   background-repeat: no-repeat;
   color: var(--text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
-  min-height: -webkit-fill-available;
   overflow-x: hidden;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  padding-left: env(safe-area-inset-left, 0px);
-  padding-right: env(safe-area-inset-right, 0px);
 }
 
 /* Clean Professional Shadows */
@@ -140,7 +134,8 @@ body {
 /* ══ Page ══ */
 .page {
   position: relative; z-index: 1;
-  max-width: 1420px; margin: 0 auto; padding: 0 32px 100px;
+  max-width: 1420px; margin: 0 auto;
+  padding: 0 max(24px, env(safe-area-inset-right, 24px)) max(80px, calc(env(safe-area-inset-bottom, 0px) + 50px)) max(24px, env(safe-area-inset-left, 24px));
 }
 
 /* ════════════════════════════════
@@ -161,9 +156,9 @@ header {
 .sun-orb::before {
   content: ''; position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 90px; height: 90px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.40) 0%, rgba(245, 158, 11, 0.15) 45%, transparent 75%);
-  filter: blur(14px); border-radius: 50%; pointer-events: none; z-index: -1;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.45) 0%, rgba(245, 158, 11, 0.20) 30%, transparent 70%);
+  filter: blur(32px); border-radius: 50%; pointer-events: none; z-index: -1;
   animation: sun-spread 4s ease-in-out infinite alternate;
 }
 @keyframes sun-spread {
@@ -1350,70 +1345,120 @@ footer {
 }
 
 /* ════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE (iOS, Android, Tablet, Desktop)
    ════════════════════════════════ */
 @media (max-width: 1100px) {
   .main-grid { grid-template-columns: 1fr; }
 }
+
 @media (max-width: 900px) {
-  header { flex-direction: column; gap: 16px; text-align: center; }
+  header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding: 18px 0 24px;
+    margin-bottom: 24px;
+  }
   .top-nav {
     order: 3;
     width: 100%;
     max-width: 100%;
+    display: flex;
+    justify-content: flex-start;
     overflow-x: auto;
-    white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    justify-content: flex-start;
-    padding: 6px 12px;
+    padding: 6px 8px;
+    gap: 6px;
   }
   .top-nav::-webkit-scrollbar { display: none; }
-  .hdr-right { justify-content: center; flex-wrap: wrap; }
-  .city-bar-wrap { flex-direction: column; align-items: stretch; text-align: center; }
+  .nav-link {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.78rem;
+    padding: 7px 14px;
+  }
+  .hdr-right {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+  .city-bar-wrap { flex-direction: column; align-items: stretch; text-align: center; padding: 18px; }
   .city-bar-left { justify-content: center; }
   .cb-search-center { flex-direction: column; min-width: 0; width: 100%; }
+  .btn-fetch-accent { width: 100%; min-height: 44px; }
   .city-bar { flex-direction: column; align-items: stretch; text-align: center; }
   .cb-left { justify-content: center; margin-bottom: 10px; }
   .wx-row { grid-template-columns: repeat(3, 1fr); }
-  .forecast-metrics-strip { grid-template-columns: 1fr; }
-  .analytics-metrics-strip { grid-template-columns: 1fr; }
+  .forecast-metrics-strip { grid-template-columns: 1fr; gap: 10px; }
+  .analytics-metrics-strip { grid-template-columns: 1fr; gap: 10px; }
 }
+
+/* Prevent auto-zooming on iOS Safari by ensuring >= 16px font on inputs */
+@media (max-width: 768px) {
+  input, select, textarea, .field input, .field select, .cb-input, .cb-input-box {
+    font-size: 16px !important;
+  }
+  body {
+    background-attachment: scroll !important; /* Optimizes 60fps scrolling on iOS Safari */
+  }
+}
+
 @media (max-width: 640px) {
-  .page { padding: 0 12px 60px; }
+  .page { padding: 0 12px max(60px, calc(env(safe-area-inset-bottom, 0px) + 40px)); }
   .sun-orb, .r1 { width: 38px !important; height: 38px !important; }
   .r2, .core-svg { width: 28px !important; height: 28px !important; }
   .sun-core { width: 14px !important; height: 14px !important; }
-  .logo-name { font-size: 1.25rem !important; }
-  .logo-sub { font-size: 0.48rem !important; letter-spacing: 1px; }
+  .logo-name { font-size: 1.3rem !important; }
+  .logo-sub { font-size: 0.52rem !important; letter-spacing: 1px; }
 
-  /* Hero adjustments */
   .hero-tag {
+    font-size: 0.65rem;
+    padding: 6px 14px;
+    gap: 4px;
     flex-wrap: wrap;
     justify-content: center;
-    font-size: 0.62rem;
-    padding: 6px 14px;
-    line-height: 1.5;
+    margin-bottom: 16px;
   }
-  .hero-title { font-size: 1.75rem !important; margin-bottom: 12px; line-height: 1.18; }
+  .hero-title {
+    font-size: 1.85rem !important;
+    line-height: 1.18 !important;
+    margin-bottom: 12px;
+  }
   .hero h1 { font-size: 1.5rem !important; margin-bottom: 12px; }
-  .hero-p { font-size: 0.8rem !important; line-height: 1.6; margin-bottom: 20px; }
+  .hero-p {
+    font-size: 0.82rem !important;
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
   .hero { padding: 10px 0 15px; }
 
-  /* Touch-friendly buttons (Apple HIG min-height 44px) */
-  .hero-cta-group { flex-direction: column; width: 100%; gap: 12px; }
-  .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; min-height: 44px; }
-  .btn-fetch-accent, .btn-primary, .btn-predict, .btn-analyze, .btn-outline { min-height: 44px; }
-
-  /* Input zoom prevention on iOS */
-  input[type="text"],
-  input[type="number"],
-  select {
-    font-size: 16px !important; /* Prevents iOS Safari auto-zoom on tap */
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .btn-hero-primary, .btn-hero-secondary {
+    width: 100%;
+    min-height: 46px;
+    justify-content: center;
   }
 
-  .hero-stats-panel { flex-direction: column; align-items: stretch; gap: 10px; padding: 14px; }
+  .hero-stats-panel {
+    flex-direction: column;
+    width: 100%;
+    padding: 14px;
+    gap: 12px;
+  }
+  .hsp-item {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 4px 8px;
+  }
   .hsp-sep { display: none; }
+
   .hero-stats { flex-direction: column; align-items: stretch; gap: 10px; padding: 14px; }
   .hs-item { padding: 6px 0; }
   .hs-num { font-size: 1.5rem !important; }
@@ -1424,35 +1469,45 @@ footer {
   .cb-search { flex-direction: column; min-width: 0; width: 100%; }
   .cb-result { justify-content: center; flex-wrap: wrap; }
   .cb-result-box { justify-content: center; flex-wrap: wrap; }
-  .card { padding: 18px; }
+
+  .card { padding: 18px 16px; border-radius: 12px; }
   .form-grid { grid-template-columns: 1fr; gap: 12px; }
-  .loc-row { flex-direction: column; align-items: stretch; }
+
+  .loc-row { flex-direction: column; align-items: stretch; gap: 10px; }
   .loc-row .field { max-width: none !important; width: 100%; }
-  .btn-analyze { margin: 10px 0 0 0; width: 100%; }
-  .metrics-row { grid-template-columns: 1fr; }
-  .tab-row { flex-wrap: wrap; justify-content: center; }
+  .btn-analyze { margin: 8px 0 0 0; width: 100%; min-height: 44px; }
+  .btn-predict { min-height: 48px; }
 
-  /* Charts and maps on mobile */
-  .chart-box { height: 220px !important; }
-  #location-map { height: 250px !important; }
-  .map-footer { flex-direction: column; gap: 14px; text-align: center; }
-  .export-row { flex-direction: column; text-align: center; gap: 14px; }
-  .exp-btns { flex-direction: column; width: 100%; }
-  .btn-outline { width: 100%; }
-  footer .ft-links { flex-direction: column; gap: 14px; align-items: center; }
-
-  /* Table horizontal scroll */
   .model-perf-table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
   }
-  .model-perf-table {
-    min-width: 360px;
+  .model-perf-table th, .model-perf-table td {
+    padding: 10px 8px;
+    font-size: 0.72rem;
   }
+
+  .metrics-row { grid-template-columns: 1fr; }
+  .tab-row { flex-wrap: wrap; justify-content: center; }
+
+  .stat-pill-row { grid-template-columns: 1fr; }
+  .chart-box { height: 230px !important; }
+  #location-map { height: 260px !important; }
+  .map-footer { flex-direction: column; gap: 12px; text-align: center; }
+  .map-footer .btn-primary { width: 100%; min-height: 44px; }
+
+  .export-row { flex-direction: column; text-align: center; gap: 14px; }
+  .exp-btns { flex-direction: column; width: 100%; gap: 10px; }
+  .exp-btns .btn-outline { width: 100%; min-height: 44px; }
+
+  footer .ft-links { flex-direction: column; gap: 12px; align-items: center; }
 }
+
 @media (max-width: 400px) {
   .wx-row { grid-template-columns: 1fr; }
-  .hero-title { font-size: 1.55rem !important; }
+  .hero-title { font-size: 1.65rem !important; }
+  .cb-heading { font-size: 1rem; }
 }
 
 /* ── Solar Panel Suitability Score Card ────────────────────── */
