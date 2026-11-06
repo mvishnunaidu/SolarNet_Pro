@@ -7,7 +7,7 @@
 [![Pandas](https://img.shields.io/badge/Pandas-2.2.2-150458?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
 [![pvlib](https://img.shields.io/badge/pvlib-0.11.1-2E8B57?style=for-the-badge&logoColor=white)](https://pvlib-python.readthedocs.io/)
 
-> **🎓 B.Tech Computer Science & Engineering Capstone Project · NBKRIST**
+> **⚡ End-to-End Applied Machine Learning System & Energy Intelligence Engine**
 >
 > A production-grade web application that predicts Global Horizontal Irradiance (GHI) and Plane of Array (POA) tilted-panel solar irradiance using a **Random Forest + XGBoost** machine learning ensemble, **pvlib** solar position physics, and a resilient **5-layer meteorological fallback system**.
 
@@ -106,8 +106,14 @@ SolarNetPro/
 *   **🌤️ 24-Hour Forecast**: Fetches live meteorological profiles for the next 24 hours to generate hourly energy projection charts.
 *   **⚙️ Solar Geometry Transposition**: Translates flat-plane irradiance (GHI) into tilted panel irradiance (POA) based on customizable tilt & azimuth angles.
 *   **📉 NASA POWER Validation**: Overlays satellite-derived historical GHI data on top of ML predictions to demonstrate pipeline accuracy.
-*   **🔋 Panel ROI Calculator**: Estimates daily and annual energy yields (kWh), financial returns, carbon offsets, and project payback periods.
-*   **📂 CSV Data Export**: Download complete 24-hour meteorological and irradiance data projections as a spreadsheet.
+*   **🛠️ Solar PV System Configurator**: Engineer custom arrays (TOPCon Mono, Bifacial Glass +12% albedo, Poly, Thin-Film), optimal tilt calculator, single/dual-axis trackers, inverter DC/AC ratio, and roof area footprint ($m^2$ and sq ft).
+*   **🔋 Energy Storage System (ESS) Sizing**: Configure LiFePO4 (6,000 cycles, 90% DoD), NMC, or AGM battery storage with round-trip efficiency and charge/discharge constraints.
+*   **⚡ Interactive 24-Hour Power Flow Hub**: Animated SVG electricity circuit routing real-time power across Solar, Battery, Home Loads, and Grid with interactive 24-hour time scrubber and auto-day simulation (1x, 2x, 5x).
+*   **🏠 Household Load Profiling**: Simulates 24-hour demand curves for Residential Standard, Commercial Office, Smart Home + EV Night Charging, and Continuous Industrial loads.
+*   **🌟 Self-Sufficiency & Self-Consumption Analytics**: Real-time KPI gauges for Grid Independence (%) and Solar Self-Consumption Rate (%).
+*   **💰 Smart Financial & ROI Analytics**: Multi-currency (₹ INR, $ USD, € EUR, £ GBP), Net Metering feed-in credits, Capex & subsidy deductions, payback period, and 25-year cumulative cash flow chart.
+*   **🌱 Levelized Cost of Energy (LCOE) & ESG**: Levelized $/kWh or ₹/kWh cost vs utility grid rates, metric tons of $CO_2$ avoided, and mature trees planted equivalent.
+*   **📋 Printable Engineering Report & CSV Export**: Generate instant technical specification reports and download complete 24-hour meteorological + energy balance spreadsheets.
 *   **🔌 Resilient Offline Fallback**: Falls back to offline regional profiles or physical models if the user runs the app offline.
 
 ---
@@ -223,6 +229,56 @@ All communication between the frontend client and the Flask server is conducted 
     }
     ```
 
+### 4. 24-Hour System & Energy Storage Simulation
+*   **Endpoint**: `/api/system-simulation`
+*   **Method**: `POST`
+*   **Request Payload**:
+    ```json
+    {
+      "panel_count": 14,
+      "panel_watt": 450.0,
+      "panel_tech": "mono",
+      "battery_enabled": true,
+      "battery_kwh": 10.0,
+      "battery_chemistry": "lifepo4",
+      "load_profile": "residential",
+      "daily_load_kwh": 20.0,
+      "grid_import_tariff": 8.0,
+      "grid_export_tariff": 4.5,
+      "system_cost": 260000,
+      "subsidy_amount": 50000
+    }
+    ```
+*   **Response Payload**:
+    ```json
+    {
+      "total_kwp": 6.3,
+      "daily_solar_kwh": 27.5,
+      "daily_load_kwh": 20.0,
+      "self_sufficiency_pct": 82.5,
+      "self_consumption_pct": 74.8,
+      "annual_saving": 54200,
+      "payback_years": 3.87,
+      "roi_pct": 25.8,
+      "lcoe": 2.75,
+      "co2_saved_kg": 8230.5,
+      "trees_equiv": 378,
+      "hourly": [
+        {
+          "hour": 12,
+          "time": "12:00 PM",
+          "solar_kw": 5.2,
+          "load_kw": 1.1,
+          "direct_kw": 1.1,
+          "batt_chg_kw": 2.8,
+          "grid_export_kw": 1.3,
+          "batt_soc_pct": 82.0
+        }
+      ],
+      "cashflow_25yr": [-210000, -155800, -100100, "..."]
+    }
+    ```
+
 ---
 
 ## 🚀 Setup & Execution
@@ -270,9 +326,9 @@ If you prefer to set up the project step-by-step:
 
 ---
 
-## 👥 Project & Institution Context
+## 👥 Applied AI/ML Engineering Architecture
 
-*   **Institution**: N.B.K.R. Institute of Science & Technology (NBKRIST), Vidyanagar
-*   **Department**: Computer Science & Engineering
-*   **Course**: B.Tech Final Year Capstone Project
-*   **Core Development Stack**: Python · Flask · Scikit-Learn · XGBoost · pvlib · Chart.js · Leaflet.js
+*   **Model Pipeline**: Dual Ensemble Regressor (Random Forest + XGBoost) with cyclic temporal transformations
+*   **Physics Layer**: pvlib solar position, Hay-Davies diffuse sky transposition, Erbs decomposition
+*   **Data Validation**: Multi-layer meteorological failover with NASA POWER satellite ground-truth overlay
+*   **Production Stack**: Python 3.8+ · Flask · Scikit-Learn · XGBoost · pvlib · Chart.js · Leaflet.js

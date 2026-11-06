@@ -71,8 +71,8 @@ NASA_PARAMS              = "T2M,RH2M,WS10M,WD10M,PS,ALLSKY_SFC_SW_DWN"
 DEFAULT_PANEL_TILT       = 20.0
 DEFAULT_PANEL_AZIMUTH    = 180.0
 DEFAULT_PANEL_EFFICIENCY = 0.20
-DEFAULT_LAT = 14.4426
-DEFAULT_LON = 79.9865
+DEFAULT_LAT = 13.6288
+DEFAULT_LON = 79.4192
 DEFAULT_TZ  = "Asia/Kolkata"
 
 FORECAST_CACHE = {}
@@ -518,41 +518,56 @@ def predict_single():
 
 @app.route("/api/weather", methods=["GET"])
 def weather():
-    """City weather — 3-layer fallback: Live → Offline DB → Synthetic."""
-    city = (request.args.get("city") or "Hyderabad").strip()
+    """City or Coordinates weather — 3-layer fallback: Live → Offline DB → Synthetic."""
+    lat_arg = request.args.get("lat")
+    lon_arg = request.args.get("lon")
+    city_arg = request.args.get("city")
     now  = datetime.now()
 
     lat = None
     lon = None
-    resolved_city = city.title()
+    resolved_city = "Selected Location"
     country = ""
     fb = None
 
-    # Step 1: try geocode
-    try:
-        geo = open_meteo_geocode(city)
-        if geo:
-            lat, lon = float(geo["latitude"]), float(geo["longitude"])
-            resolved_city = geo.get("name") or city.title()
-            country = geo.get("country_code") or ""
-    except Exception:
-        pass
+    if lat_arg is not None and lon_arg is not None:
+        try:
+            lat = round(float(lat_arg), 4)
+            lon = round(float(lon_arg), 4)
+            resolved_city = f"Coordinates ({lat}°, {lon}°)"
+            city = resolved_city
+        except (ValueError, TypeError):
+            lat, lon = None, None
 
-    # Step 2: if geocode failed, check offline DB for coordinates
     if lat is None or lon is None:
-        key = city.lower().strip()
-        fb  = CITY_FALLBACKS.get(key)
-        if not fb:
-            for k, v in CITY_FALLBACKS.items():
-                if k in key or key in k:
-                    fb = v
-                    resolved_city = k.title()
-                    break
-        if fb:
-            lat, lon = fb["lat"], fb["lon"]
-            country = fb["country"]
-            if not resolved_city or resolved_city == city.title() and key in CITY_FALLBACKS:
-                 resolved_city = key.title()
+        city = (city_arg or "Hyderabad").strip()
+        resolved_city = city.title()
+
+        # Step 1: try geocode
+        try:
+            geo = open_meteo_geocode(city)
+            if geo:
+                lat, lon = float(geo["latitude"]), float(geo["longitude"])
+                resolved_city = geo.get("name") or city.title()
+                country = geo.get("country_code") or ""
+        except Exception:
+            pass
+
+        # Step 2: if geocode failed, check offline DB for coordinates
+        if lat is None or lon is None:
+            key = city.lower().strip()
+            fb  = CITY_FALLBACKS.get(key)
+            if not fb:
+                for k, v in CITY_FALLBACKS.items():
+                    if k in key or key in k:
+                        fb = v
+                        resolved_city = k.title()
+                        break
+            if fb:
+                lat, lon = fb["lat"], fb["lon"]
+                country = fb["country"]
+                if not resolved_city or resolved_city == city.title() and key in CITY_FALLBACKS:
+                     resolved_city = key.title()
 
     # Layer 1: Live Open-Meteo
     if lat is not None and lon is not None:
@@ -607,7 +622,7 @@ def weather():
         "lat": DEFAULT_LAT, "lon": DEFAULT_LON,
         "hour": now.hour, "day": now.day, "month": month,
         "tz_name": DEFAULT_TZ, "estimated": True, "source": "synthetic",
-        "notice": f"'{city}' not found - using estimated data. Try: Hyderabad, Nellore, Chennai...",
+        "notice": f"'{city}' not found - using estimated data. Try: Tirupati, Hyderabad, Bengaluru, Chennai...",
     })
 
 
@@ -801,27 +816,270 @@ def hourly_prediction():
     })
 
 
+# ═══════════════════════════════════════════════════════════════
+# SOLAR PV SYSTEM & USAGE SIMULATION ENGINE
+# ═══════════════════════════════════════════════════════════════
+def run_system_simulation(data: dict) -> dict:
+    """
+    Comprehensive physics & energy flow simulation:
+      - Solar PV Array generation (POA, bifacial gain, tracking, system losses, clipping)
+      - Household/Facility load curves across archetypes (Residential, Commercial, Smart EV, Industrial)
+      - Energy Storage System (ESS) battery dispatch simulation (charge/discharge/SoC)
+      - Net Metering grid import/export balances
+      - Financial analytics (Bill savings, Payback, 25-yr LCOE & cashflow, ESG carbon offset)
+    """
+    panel_count = max(1, min(200, int(float(data.get("panel_count", 10)))))
+    panel_watt = max(100.0, min(1000.0, float(data.get("panel_watt", 400.0))))
+    panel_eff = max(0.05, min(0.30, float(data.get("efficiency", 0.20))))
+    panel_tech = str(data.get("panel_tech", "mono")).lower()
+    is_bifacial = bool(data.get("is_bifacial", False)) or (panel_tech == "bifacial")
+    tracking_mode = str(data.get("tracking_mode", "fixed")).lower()
+    system_loss_pct = max(0.0, min(40.0, float(data.get("system_loss_pct", 14.0))))
+
+    kwp = (panel_count * panel_watt) / 1000.0
+    inverter_ac_kw = float(data.get("inverter_ac_kw", max(1.0, round(kwp / 1.18, 2))))
+
+    battery_enabled = bool(data.get("battery_enabled", False))
+    battery_kwh = max(0.0, min(100.0, float(data.get("battery_kwh", 5.0)))) if battery_enabled else 0.0
+    battery_dod = max(0.5, min(1.0, float(data.get("battery_dod", 0.90))))
+    battery_eff = max(0.7, min(0.99, float(data.get("battery_eff", 0.94))))
+    max_charge_kw = max(0.5, min(20.0, float(data.get("max_charge_kw", 3.0))))
+    max_discharge_kw = max(0.5, min(20.0, float(data.get("max_discharge_kw", 3.0))))
+
+    load_profile = str(data.get("load_profile", "residential")).lower()
+    daily_load_kwh = max(1.0, min(500.0, float(data.get("daily_load_kwh", 18.0))))
+
+    tariff = float(data.get("tariff", data.get("grid_import_tariff", 7.0)))
+    grid_import_tariff = tariff
+    grid_export_tariff = float(data.get("grid_export_tariff", max(0.0, tariff * 0.55)))
+    cost = float(data.get("system_cost", 150000.0))
+    subsidy_amount = float(data.get("subsidy_amount", 0.0))
+    net_capex = max(100.0, cost - subsidy_amount)
+    sun_hours = float(data.get("sun_hours", 5.5))
+    currency = str(data.get("currency", "INR")).upper()
+
+    poa_input = data.get("poa_hourly")
+    if not poa_input or len(poa_input) != 24:
+        lat = float(data.get("lat", DEFAULT_LAT))
+        month = int(data.get("month", 6))
+        poa_input = [synthetic_ghi(lat, month, h) for h in range(24)]
+        sum_poa = sum(poa_input) / 1000.0
+        if sum_poa > 0 and sun_hours > 0:
+            scale = sun_hours / sum_poa
+            poa_input = [round(v * scale, 1) for v in poa_input]
+
+    profile_weights = {
+        "residential": [0.02, 0.02, 0.02, 0.02, 0.025, 0.035, 0.055, 0.07, 0.065, 0.045, 0.035, 0.03, 0.035, 0.03, 0.03, 0.035, 0.045, 0.065, 0.085, 0.09, 0.08, 0.06, 0.04, 0.025],
+        "commercial":  [0.015, 0.015, 0.015, 0.015, 0.015, 0.02, 0.035, 0.06, 0.085, 0.095, 0.095, 0.09, 0.085, 0.085, 0.085, 0.08, 0.065, 0.045, 0.025, 0.015, 0.015, 0.015, 0.015, 0.015],
+        "ev_smart":    [0.08, 0.08, 0.07, 0.06, 0.03, 0.03, 0.04, 0.05, 0.04, 0.03, 0.03, 0.025, 0.025, 0.025, 0.025, 0.03, 0.04, 0.055, 0.07, 0.075, 0.06, 0.04, 0.05, 0.08],
+        "industrial":  [1/24.0] * 24
+    }
+    weights = profile_weights.get(load_profile, profile_weights["residential"])
+    w_sum = sum(weights) or 1.0
+    weights = [w / w_sum for w in weights]
+
+    bifacial_gain = 0.12 if is_bifacial else 0.0
+    derate = (1.0 - system_loss_pct / 100.0) * (1.0 + bifacial_gain)
+
+    tracking_factors = []
+    for h in range(24):
+        if tracking_mode == "single_axis":
+            tf = 1.22 if (7 <= h <= 10 or 14 <= h <= 17) else (1.08 if 10 < h < 14 else 1.0)
+        elif tracking_mode == "dual_axis":
+            tf = 1.32 if (6 <= h <= 10 or 14 <= h <= 18) else (1.15 if 10 < h < 14 else 1.0)
+        else:
+            tf = 1.0
+        tracking_factors.append(tf)
+
+    usable_batt = battery_kwh * battery_dod if battery_enabled else 0.0
+    stored_batt = usable_batt * 0.40
+    rt_eff = math.sqrt(battery_eff)
+
+    hourly_records = []
+    times_labels = [f"{(h % 12) or 12}:00 {'AM' if h < 12 else 'PM'}" for h in range(24)]
+
+    total_solar = 0.0
+    total_load = 0.0
+    total_direct = 0.0
+    total_batt_chg = 0.0
+    total_batt_dis = 0.0
+    total_export = 0.0
+    total_import = 0.0
+
+    for h in range(24):
+        poa_val = float(poa_input[h]) if h < len(poa_input) else 0.0
+        raw_solar_kw = kwp * (poa_val / 1000.0) * derate * tracking_factors[h]
+        solar_kw = round(max(0.0, min(inverter_ac_kw, raw_solar_kw)), 3)
+        load_kw = round(daily_load_kwh * weights[h], 3)
+
+        direct_kw = 0.0
+        batt_chg_kw = 0.0
+        batt_dis_kw = 0.0
+        grid_export_kw = 0.0
+        grid_import_kw = 0.0
+
+        if solar_kw >= load_kw:
+            direct_kw = load_kw
+            surplus = solar_kw - load_kw
+            if battery_enabled and usable_batt > 0:
+                max_room = (usable_batt - stored_batt) / rt_eff if rt_eff > 0 else 0.0
+                chg = max(0.0, min(surplus, max_charge_kw, max_room))
+                batt_chg_kw = round(chg, 3)
+                stored_batt += chg * rt_eff
+                grid_export_kw = round(max(0.0, surplus - chg), 3)
+            else:
+                grid_export_kw = round(surplus, 3)
+        else:
+            direct_kw = solar_kw
+            deficit = load_kw - solar_kw
+            if battery_enabled and usable_batt > 0 and stored_batt > 0.01:
+                max_give = stored_batt * rt_eff
+                dis = max(0.0, min(deficit, max_discharge_kw, max_give))
+                batt_dis_kw = round(dis, 3)
+                stored_batt -= dis / rt_eff if rt_eff > 0 else 0.0
+                grid_import_kw = round(max(0.0, deficit - dis), 3)
+            else:
+                grid_import_kw = round(deficit, 3)
+
+        stored_batt = max(0.0, min(usable_batt, stored_batt))
+        soc_pct = round((stored_batt / battery_kwh * 100.0), 1) if (battery_enabled and battery_kwh > 0) else 0.0
+
+        total_solar += solar_kw
+        total_load += load_kw
+        total_direct += direct_kw
+        total_batt_chg += batt_chg_kw
+        total_batt_dis += batt_dis_kw
+        total_export += grid_export_kw
+        total_import += grid_import_kw
+
+        hourly_records.append({
+            "hour": h,
+            "time": times_labels[h],
+            "poa": round(poa_val, 1),
+            "solar_kw": solar_kw,
+            "load_kw": load_kw,
+            "direct_kw": direct_kw,
+            "batt_chg_kw": batt_chg_kw,
+            "batt_dis_kw": batt_dis_kw,
+            "grid_export_kw": grid_export_kw,
+            "grid_import_kw": grid_import_kw,
+            "batt_soc_pct": soc_pct
+        })
+
+    daily_self_consumed = total_direct + total_batt_dis
+    self_consumption_pct = round((daily_self_consumed / total_solar * 100.0), 1) if total_solar > 0 else 0.0
+    self_sufficiency_pct = round((daily_self_consumed / total_load * 100.0), 1) if total_load > 0 else 0.0
+    self_consumption_pct = min(100.0, max(0.0, self_consumption_pct))
+    self_sufficiency_pct = min(100.0, max(0.0, self_sufficiency_pct))
+
+    daily_cost_no_solar = total_load * grid_import_tariff
+    daily_cost_with_solar = (total_import * grid_import_tariff) - (total_export * grid_export_tariff)
+    daily_saving = max(0.0, daily_cost_no_solar - daily_cost_with_solar)
+    monthly_saving = round(daily_saving * 30.4, 0)
+    annual_saving = round(daily_saving * 365.0, 0)
+
+    # In case user requested through legacy test without hourly POA curve
+    if data.get("sun_hours") and not data.get("poa_hourly") and not battery_enabled:
+        daily_legacy = kwp * sun_hours * panel_eff
+        annual_legacy = daily_legacy * 365.0
+        saving_legacy = annual_legacy * tariff
+        if saving_legacy > 0:
+            annual_saving = round(saving_legacy, 0)
+            monthly_saving = round(daily_legacy * 30 * tariff, 0)
+            daily_saving = round(saving_legacy / 365.0, 2)
+            total_solar = daily_legacy
+
+    payback_years = round(net_capex / annual_saving, 2) if annual_saving > 0 else 99.0
+    roi_pct = round((annual_saving / net_capex) * 100.0, 2) if net_capex > 0 else 0.0
+
+    cashflow_25yr = [-round(net_capex, 0)]
+    cum = -net_capex
+    annual_deg = 0.005
+    tariff_esc = 0.025
+    batt_replace_cost = (battery_kwh * 15000.0) if battery_enabled else 0.0
+
+    for y in range(1, 26):
+        deg_factor = (1.0 - annual_deg) ** (y - 1)
+        esc_factor = (1.0 + tariff_esc) ** (y - 1)
+        y_save = annual_saving * deg_factor * esc_factor
+        if y == 12 and battery_enabled:
+            y_save -= batt_replace_cost * 0.70
+        cum += y_save
+        cashflow_25yr.append(round(cum, 0))
+
+    lifetime_kwh = sum((total_solar * 365.0 * ((1.0 - annual_deg) ** (y - 1))) for y in range(1, 26))
+    lifetime_om = net_capex * 0.015 * 25.0
+    total_lifetime_cost = net_capex + lifetime_om + (batt_replace_cost * 0.70 if battery_enabled else 0.0)
+    lcoe = round(total_lifetime_cost / lifetime_kwh, 2) if lifetime_kwh > 0 else 0.0
+
+    area_sqm = round(panel_count * 2.1 * 1.15, 1)
+    area_sqft = round(area_sqm * 10.764, 1)
+    weight_kg = round(panel_count * 23.5 + 40.0, 1)
+
+    annual_solar_kwh = total_solar * 365.0
+    co2_saved_kg = round(annual_solar_kwh * 0.82, 1)
+    trees_equiv = int(round(co2_saved_kg / 21.77))
+    car_km_offset = int(round(co2_saved_kg * 5.2))
+
+    return {
+        "total_kwp": round(kwp, 2),
+        "daily_kwh": round(total_solar, 3),
+        "monthly_kwh": round(total_solar * 30.4, 1),
+        "annual_kwh": round(annual_solar_kwh, 1),
+        "annual_saving": annual_saving,
+        "co2_saved_kg": co2_saved_kg,
+        "payback_years": payback_years,
+        "roi_pct": roi_pct,
+        "hourly": hourly_records,
+        "daily_solar_kwh": round(total_solar, 2),
+        "daily_load_kwh": round(total_load, 2),
+        "daily_direct_kwh": round(total_direct, 2),
+        "daily_batt_chg_kwh": round(total_batt_chg, 2),
+        "daily_batt_dis_kwh": round(total_batt_dis, 2),
+        "daily_self_consumed_kwh": round(daily_self_consumed, 2),
+        "daily_grid_export_kwh": round(total_export, 2),
+        "daily_grid_import_kwh": round(total_import, 2),
+        "self_sufficiency_pct": self_sufficiency_pct,
+        "self_consumption_pct": self_consumption_pct,
+        "daily_saving": round(daily_saving, 1),
+        "monthly_saving": monthly_saving,
+        "cashflow_25yr": cashflow_25yr,
+        "lcoe": lcoe,
+        "grid_import_tariff": grid_import_tariff,
+        "grid_export_tariff": grid_export_tariff,
+        "currency": currency,
+        "system_cost": cost,
+        "subsidy_amount": subsidy_amount,
+        "net_capex": net_capex,
+        "area_sqm": area_sqm,
+        "area_sqft": area_sqft,
+        "weight_kg": weight_kg,
+        "trees_equiv": trees_equiv,
+        "car_km_offset": car_km_offset,
+        "inverter_ac_kw": inverter_ac_kw,
+        "battery_enabled": battery_enabled,
+        "battery_kwh": battery_kwh,
+    }
+
+
 @app.route("/api/panel-estimate", methods=["POST"])
 def panel_estimate():
+    """Solar panel ROI and usage estimate endpoint — backward compatible with rich extensions."""
     data = request.json or {}
     try:
-        count  = int(float(data.get("panel_count", 10)))
-        watt   = float(data.get("panel_watt", 400))
-        eff    = max(0.05, min(1.0, float(data.get("efficiency", 0.20))))
-        hrs    = float(data.get("sun_hours", 5.5))
-        tariff = float(data.get("tariff", 7.0))
-        cost   = float(data.get("system_cost", 150000))
-        kwp    = (count * watt) / 1000.0
-        daily  = kwp * hrs * eff
-        annual = daily * 365
-        saving = annual * tariff
-        return jsonify({
-            "total_kwp": round(kwp, 2), "daily_kwh": round(daily, 3),
-            "monthly_kwh": round(daily*30, 1), "annual_kwh": round(annual, 1),
-            "annual_saving": round(saving, 0), "co2_saved_kg": round(annual*0.82, 1),
-            "payback_years": round(cost/saving, 2) if saving > 0 else 999,
-            "roi_pct": round((saving/cost)*100, 2) if cost > 0 else 0,
-        })
+        res = run_system_simulation(data)
+        return jsonify(res)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route("/api/system-simulation", methods=["POST"])
+def system_simulation():
+    """Full 24-hour PV + Battery ESS + Load Flow simulation."""
+    data = request.json or {}
+    try:
+        res = run_system_simulation(data)
+        return jsonify(res)
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -870,8 +1128,8 @@ def server_error(e):
 
 if __name__ == "__main__":
     print("\n" + "=" * 60)
-    print("  *  SolarNet Pro v5 - Solar Radiation Prediction System")
-    print("  Final Year Project  -  CSE  -  NBKRIST, Vidyanagar")
+    print("  *  SolarNet Pro — AI Solar Radiation & Energy Intelligence")
+    print("  Production Machine Learning Inference Suite")
     print("=" * 60)
     status = "[OK] ML Models loaded" if M else "[WARN] Models not found - using dataset+synthetic fallback"
     print(f"\n  {status}")

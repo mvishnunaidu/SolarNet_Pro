@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "========================================================"
-echo "  SolarNet Pro — Final Year Project — NBKRIST CSE"
+echo "  SolarNet Pro — AI Solar Radiation & PV Simulation Platform"
 echo "========================================================"
 echo ""
 
