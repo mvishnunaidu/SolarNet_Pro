@@ -61,14 +61,24 @@ html {
 }
 
 body {
-  background-color: #070D18;
+  background-color: #0B1220;
   background-image: 
-    radial-gradient(circle at 50% 5%, rgba(14, 165, 233, 0.15) 0%, transparent 55%),
-    radial-gradient(circle at 12% 18%, rgba(245, 158, 11, 0.10) 0%, transparent 40%),
-    linear-gradient(180deg, rgba(7, 13, 24, 0.48) 0%, rgba(7, 13, 24, 0.75) 35%, rgba(7, 13, 24, 0.92) 80%, #070D18 100%),
-    url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2500&auto=format&fit=crop');
+    /* Sun radiance enhancement directly focused on the sunrise horizon */
+    radial-gradient(circle at 14% 54%, rgba(245, 158, 11, 0.26) 0%, rgba(245, 158, 11, 0.08) 35%, transparent 65%),
+    /* Blue sky reflection over the solar panel arrays on the right */
+    radial-gradient(circle at 86% 62%, rgba(14, 165, 233, 0.18) 0%, rgba(14, 165, 233, 0.04) 40%, transparent 60%),
+    /* Subtle upper center vignette for top navigation legibility */
+    radial-gradient(ellipse at 50% 0%, rgba(11, 18, 32, 0.45) 0%, transparent 65%),
+    /* Ultra-clean gradient: sheer in the hero view so sun and solar panels are crystal clear */
+    linear-gradient(180deg, 
+      rgba(11, 18, 32, 0.18) 0%, 
+      rgba(11, 18, 32, 0.14) 25%, 
+      rgba(11, 18, 32, 0.32) 55%, 
+      rgba(11, 18, 32, 0.72) 80%, 
+      #0B1220 100%),
+    url('/static/images/solar-theme.jpg');
   background-size: cover;
-  background-position: center top;
+  background-position: center 30%;
   background-attachment: fixed;
   background-repeat: no-repeat;
   color: var(--text);
@@ -76,6 +86,28 @@ body {
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+/* Atmospheric Dawn Lighting Mode */
+body.theme-light-mode {
+  background-color: #0E1A2E;
+  background-image: 
+    radial-gradient(circle at 14% 54%, rgba(245, 158, 11, 0.38) 0%, rgba(245, 158, 11, 0.14) 40%, transparent 70%),
+    radial-gradient(circle at 86% 62%, rgba(14, 165, 233, 0.28) 0%, rgba(14, 165, 233, 0.08) 45%, transparent 65%),
+    radial-gradient(ellipse at 50% 0%, rgba(14, 26, 46, 0.35) 0%, transparent 65%),
+    linear-gradient(180deg, 
+      rgba(14, 26, 46, 0.10) 0%, 
+      rgba(14, 26, 46, 0.08) 25%, 
+      rgba(14, 26, 46, 0.22) 55%, 
+      rgba(14, 26, 46, 0.55) 80%, 
+      #0E1A2E 100%),
+    url('/static/images/solar-theme.jpg');
+}
+body.theme-light-mode .card,
+body.theme-light-mode .hero-stats-panel,
+body.theme-light-mode .city-bar-wrap {
+  background: rgba(18, 30, 52, 0.65);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 /* Clean Professional Shadows */
@@ -466,14 +498,18 @@ header {
   color: transparent;
 }
 .hero-title-pred {
-  color: #FBBF24;
-  text-shadow: 0 0 28px rgba(251, 191, 36, 0.45);
-}
-.hero-title-sys {
-  background: linear-gradient(135deg, #A855F7 0%, #38BDF8 100%);
+  background: linear-gradient(135deg, #FBBF24 0%, #A3E635 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 0 24px rgba(251, 191, 36, 0.35));
+}
+.hero-title-sys {
+  background: linear-gradient(135deg, #34D399 0%, #38BDF8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px rgba(56, 189, 248, 0.35));
 }
 
 .hero-p {
@@ -540,13 +576,13 @@ header {
 .hero-stats-panel {
   display: inline-flex;
   align-items: center;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 18px;
+  background: rgba(13, 21, 38, 0.60);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 20px;
   padding: 16px 36px;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.55), 0 0 1px 1px rgba(255, 255, 255, 0.06) inset;
   margin: 0 auto;
   flex-wrap: wrap;
   justify-content: center;
@@ -598,15 +634,15 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 18px 26px;
+  background: rgba(13, 21, 38, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 18px 28px;
   margin-top: 36px;
   margin-bottom: 24px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(255, 255, 255, 0.05) inset;
   flex-wrap: wrap;
 }
 .city-bar-left {
@@ -776,14 +812,14 @@ header {
 }
 
 .card {
-  background: rgba(15, 23, 42, 0.82);
+  background: rgba(13, 21, 38, 0.70);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: var(--rad); padding: 26px;
   transition: var(--tran);
   min-width: 0;
-  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255, 255, 255, 0.05) inset;
+  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.55), 0 0 1px 1px rgba(255, 255, 255, 0.05) inset;
 }
 .card:hover {
   border-color: rgba(251, 191, 36, 0.28);

@@ -385,7 +385,7 @@ async function fetchCity() {
 
   refreshChart();
 
-  if (btn) btn.textContent = '⚡ Fetch Weather';
+  if (btn) btn.textContent = '☁️ Fetch Weather';
 }
 
 function updateWxStrip(d) {
