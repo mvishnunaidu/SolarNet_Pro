@@ -171,36 +171,28 @@ body.theme-light-mode .city-bar-wrap {
 }
 
 /* ════════════════════════════════
-   HEADER (Modern Sticky Frosted Bar)
+   HEADER
    ════════════════════════════════ */
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 22px;
-  background: rgba(11, 18, 32, 0.82);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  margin: 14px 0 28px 0;
-  position: sticky;
-  top: 12px;
-  z-index: 100;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 1px 1px rgba(255, 255, 255, 0.06) inset;
-  gap: 16px;
-  flex-wrap: wrap;
+  padding: 24px 0 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  margin-bottom: 36px;
+  position: relative;
+  z-index: 10;
 }
 
 /* Sun orb */
 .sun-orb {
-  width: 52px; height: 52px; position: relative;
+  width: 56px; height: 56px; position: relative;
   display: flex; align-items: center; justify-content: center;
 }
 .sun-orb::before {
   content: ''; position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 260px; height: 260px;
+  width: 300px; height: 300px;
   background: radial-gradient(circle, rgba(251, 146, 60, 0.45) 0%, rgba(245, 158, 11, 0.20) 30%, transparent 70%);
   filter: blur(32px); border-radius: 50%; pointer-events: none; z-index: -1;
   animation: sun-spread 4s ease-in-out infinite alternate;
@@ -219,27 +211,27 @@ header {
   position: absolute; border-radius: 50%; border: 2px dashed;
 }
 .r1 {
-  width: 52px; height: 52px; border-color: rgba(245,158,11,.35);
+  width: 56px; height: 56px; border-color: rgba(245,158,11,.35);
   animation: spin 12s linear infinite;
 }
 .r2 {
-  width: 40px; height: 40px; border-color: rgba(245,158,11,.2);
+  width: 44px; height: 44px; border-color: rgba(245,158,11,.2);
   animation: spin-rev 8s linear infinite;
 }
 .sun-core {
-  width: 22px; height: 22px; border-radius: 50%; z-index: 1;
+  width: 24px; height: 24px; border-radius: 50%; z-index: 1;
   animation: orb-pulse 3s ease-in-out infinite; background: rgba(245,158,11,0.2);
 }
 .core-svg {
-  width: 40px; height: 40px; position: absolute; z-index: 2;
+  width: 44px; height: 44px; position: absolute; z-index: 2;
   animation: spin 12s linear infinite; pointer-events: none;
   filter: drop-shadow(0 0 3px rgba(245,158,11,0.5));
 }
 
-.logo { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+.logo { display: flex; align-items: center; gap: 20px; }
 .logo-name {
-  font-family: 'Outfit', sans-serif; font-size: 1.85rem; font-weight: 900; color: #FFFFFF;
-  letter-spacing: -0.5px; line-height: 1.1;
+  font-family: 'Outfit', sans-serif; font-size: 1.9rem; font-weight: 900; color: #FFFFFF;
+  letter-spacing: -0.5px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 .logo-name .acc { color: #FBBF24; text-shadow: 0 0 12px rgba(251, 191, 36, 0.6); }
@@ -249,7 +241,7 @@ header {
   border-radius: 6px; margin-left: 8px; letter-spacing: 1.5px; vertical-align: middle;
 }
 .logo-sub {
-  font-size: 0.68rem; color: #CBD5E1; letter-spacing: 2px;
+  font-size: 0.66rem; color: #CBD5E1; letter-spacing: 2px;
   text-transform: uppercase; margin-top: 4px; font-family: 'Space Mono', monospace; font-weight: 600;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
@@ -299,67 +291,71 @@ header {
 }
 
 .theme-toggle-btn {
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(251, 191, 36, 0.45);
+  background: rgba(17, 27, 46, 0.75);
+  border: 1px solid rgba(251, 191, 36, 0.35);
   color: #FBBF24;
   border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.15rem;
-  box-shadow: 0 0 16px rgba(251, 191, 36, 0.3);
-  transition: all 0.22s ease;
-  flex-shrink: 0;
+  font-size: 0.95rem;
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.25);
+  transition: all 0.2s ease;
 }
 .theme-toggle-btn:hover {
-  transform: rotate(25deg) scale(1.1);
-  box-shadow: 0 0 22px rgba(251, 191, 36, 0.6);
-  border-color: #FBBF24;
+  transform: rotate(25deg) scale(1.08);
+  border-color: rgba(251, 191, 36, 0.6);
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.4);
 }
 
 .hdr-right {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
+  gap: 10px;
 }
 
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 .live-pill {
-  display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+  display: flex; align-items: center; gap: 5px; padding: 4px 10px;
   background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(52, 211, 153, 0.45);
-  border-radius: 100px; font-size: 0.72rem; font-weight: 800; color: #34D399;
+  border-radius: 100px; font-size: 0.65rem; font-weight: 800; color: #34D399;
   letter-spacing: 1.5px; font-family: 'Space Mono', monospace;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 }
 .live-blink {
-  display: block; width: 6px; height: 6px; border-radius: 50%;
-  background: #34D399; box-shadow: 0 0 8px #34D399;
+  display: block; width: 5px; height: 5px; border-radius: 50%;
+  background: #34D399; box-shadow: 0 0 6px #34D399;
   animation: blink 1.2s infinite;
 }
 
 .clock-box {
-  display: flex;
-  align-items: center;
-  gap: 7px;
   background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 100px;
-  padding: 6px 14px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 4px 10px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
-.clock-icon { font-size: 0.85rem; }
-.clock-label { display: none; }
+.clock-label {
+  font-size: 0.50rem;
+  color: #94A3B8;
+  letter-spacing: 1.5px;
+  margin-bottom: 1px;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+}
 .clock {
   font-family: 'Space Mono', monospace;
-  font-size: 0.86rem;
+  font-size: 0.80rem;
   color: #38BDF8;
-  letter-spacing: 0.8px;
-  font-weight: 700;
-  text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+  letter-spacing: 0.5px;
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
 }
 
 .btn-ghost {
@@ -369,29 +365,39 @@ header {
 }
 .btn-ghost:hover { border-color: var(--border-gold); color: var(--gold); }
 
-/* Auto-Refresh Control Bar (Clean Pill) */
+/* Auto-Refresh Control Bar (Compact Previous Structure, Crisp Colors) */
 .ar-control-box {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(16, 185, 129, 0.45);
-  border-radius: 100px;
-  padding: 5px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 6px;
+  padding: 3px 8px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: all 0.25s ease;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
 .ar-control-box.active {
-  border-color: rgba(16, 185, 129, 0.55);
-  box-shadow: 0 0 14px rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+}
+.ar-left {
+  display: flex;
+  flex-direction: column;
+}
+.ar-label-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 .ar-pulse {
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: #34D399;
-  box-shadow: 0 0 6px #34D399;
+  box-shadow: 0 0 5px #34D399;
   animation: blink 1.2s infinite;
 }
 .ar-pulse.off {
@@ -399,26 +405,33 @@ header {
   box-shadow: none;
   animation: none;
 }
-.ar-title { display: none; }
+.ar-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.50rem;
+  color: #94A3B8;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
 .ar-countdown {
   font-family: 'Space Mono', monospace;
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: 0.74rem;
+  font-weight: 800;
   color: #34D399;
   letter-spacing: 0.5px;
   min-width: 38px;
-  text-align: center;
+  text-align: right;
 }
 .ar-countdown.off {
   color: #64748B;
 }
 .ar-select {
-  background: rgba(11, 18, 32, 0.9);
+  background: rgba(11, 18, 32, 0.90);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+  border-radius: 4px;
   color: #F8FAFC;
   font-family: 'Space Mono', monospace;
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   font-weight: 700;
   padding: 2px 6px;
   height: 24px;
@@ -434,16 +447,16 @@ header {
   color: #F8FAFC;
 }
 .ar-trigger-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
   color: #FBBF24;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  font-size: 0.74rem;
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 0;
