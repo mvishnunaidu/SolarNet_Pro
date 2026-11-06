@@ -2134,23 +2134,50 @@ function initNavScrollSpy() {
   }, { passive: true });
 }
 
-/* ── Atmospheric Theme Toggle ──────────────────────────────── */
-let isAtmosphericLight = false;
+/* ── Atmospheric Theme Toggle (Default: Half Sun Dawn, Switch: Full Sun Low Light) ── */
+const HALF_SUN_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="18" x2="22" y2="18"></line><path d="M6 18a6 6 0 0 1 12 0" fill="#FBBF24" stroke="#F59E0B"></path><line x1="12" y1="4" x2="12" y2="7"></line><line x1="4.93" y1="10.93" x2="7.05" y2="13.05"></line><line x1="19.07" y1="10.93" x2="16.95" y2="13.05"></line><line x1="2" y1="14" x2="5" y2="14"></line><line x1="19" y1="14" x2="22" y2="14"></line></svg>`;
+
+const FULL_SUN_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" fill="#FBBF24" stroke="#F59E0B"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+
+let isLowLight = false;
+
+function initTheme() {
+  const saved = localStorage.getItem('solarnet_theme');
+  isLowLight = (saved === 'low_light');
+  applyThemeState();
+}
+
 function toggleTheme() {
-  isAtmosphericLight = !isAtmosphericLight;
-  const btn = el('theme-toggle-btn');
-  if (btn) btn.textContent = isAtmosphericLight ? '🌙' : '☀️';
-  if (isAtmosphericLight) {
-    document.body.classList.add('theme-light-mode');
-    showStatusNotice('☀️ Atmospheric Dawn Lighting mode active', 'info');
+  isLowLight = !isLowLight;
+  localStorage.setItem('solarnet_theme', isLowLight ? 'low_light' : 'half_sun');
+  applyThemeState();
+  if (isLowLight) {
+    showStatusNotice('☀️ Low Light mode active', 'info');
   } else {
+    showStatusNotice('🌅 Half Sun (Atmospheric Dawn) mode active', 'info');
+  }
+}
+
+function applyThemeState() {
+  const btn = el('theme-toggle-btn');
+  if (isLowLight) {
     document.body.classList.remove('theme-light-mode');
-    showStatusNotice('🌙 Deep Obsidian Night mode active', 'info');
+    if (btn) {
+      btn.innerHTML = FULL_SUN_SVG;
+      btn.setAttribute('title', 'Low Light active — Click for Half Sun');
+    }
+  } else {
+    document.body.classList.add('theme-light-mode');
+    if (btn) {
+      btn.innerHTML = HALF_SUN_SVG;
+      btn.setAttribute('title', 'Half Sun active — Click for Low Light');
+    }
   }
 }
 
 /* ── Init ────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   initDefaultChart();
   loadMetrics();
   initMap();

@@ -310,6 +310,12 @@ header {
   border-color: rgba(251, 191, 36, 0.6);
   box-shadow: 0 0 16px rgba(251, 191, 36, 0.4);
 }
+.theme-toggle-btn svg {
+  width: 17px;
+  height: 17px;
+  display: block;
+  pointer-events: none;
+}
 
 .hdr-right {
   display: flex;
