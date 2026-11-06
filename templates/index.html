@@ -17,7 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=33"/>
+  <link rel="stylesheet" href="/static/css/style.css?v=34"/>
   <style>
     .leaflet-control-attribution{display:none}
     .leaflet-control-zoom a{background:rgba(30,41,59,.95)!important;color:#F59E0B!important;border-color:rgba(245,158,11,.3)!important}
@@ -171,20 +171,6 @@
       <span class="hero-title-white">Solar Radiation</span><br/>
       <span class="hero-title-gradient">Prediction System</span>
     </h1>
-    <p class="hero-p">
-      A dual ML ensemble trained on 32,000+ meteorological records to accurately forecast solar irradiance (W/m²),
-      estimate solar panel energy yields, and model home self-consumption savings.
-    </p>
-
-    <!-- Strong Dual Call-To-Action (CTA) Buttons -->
-    <div class="hero-cta-group">
-      <button class="btn-hero-primary" onclick="document.getElementById('prediction-section').scrollIntoView({behavior: 'smooth'})">
-        ⚡ Predict Now
-      </button>
-      <button class="btn-hero-secondary" onclick="document.getElementById('forecast-section').scrollIntoView({behavior: 'smooth'})">
-        📊 View Forecast
-      </button>
-    </div>
 
     <!-- Key Metrics Cards Row -->
     <div class="hero-stats-panel">
@@ -768,19 +754,75 @@
   </div>
 
   <!-- ══════════════════════ FOOTER ══════════════════════ -->
-  <footer id="about-section">
-    <div class="ft-logo">☀️ <span class="gold">SolarNet Pro</span></div>
-    <div class="ft-desc">
-      Applied Machine Learning System · Random Forest + XGBoost · pvlib Solar Geometry · Open-Meteo &amp; NASA POWER
+  <footer id="about-section" class="modern-footer">
+    <div class="ft-top-row">
+      <div class="ft-brand">
+        <div class="ft-brand-title">
+          <span class="ft-sun-icon">☀️</span>
+          <span class="ft-brand-name">Solar<span class="acc">Net</span></span>
+          <span class="pro-badge">PRO</span>
+        </div>
+        <p class="ft-tagline">AI-Powered Solar Radiation &amp; Renewable Energy Intelligence Suite</p>
+      </div>
+      <div class="ft-status-badge">
+        <span class="ft-status-dot"></span>
+        <span>Dual Ensemble Active (RF + XGBoost)</span>
+      </div>
     </div>
+
+    <!-- Tech Stack Capsule Pills -->
+    <div class="ft-pills-wrap">
+      <div class="ft-tech-pill">
+        <span class="fp-dot gold"></span>
+        <span>Random Forest Regressor (R² 0.953)</span>
+      </div>
+      <div class="ft-tech-pill">
+        <span class="fp-dot cyan"></span>
+        <span>XGBoost Gradient Boosting (R² 0.958)</span>
+      </div>
+      <div class="ft-tech-pill">
+        <span class="fp-dot violet"></span>
+        <span>pvlib Solar Geometry Engine</span>
+      </div>
+      <div class="ft-tech-pill">
+        <span class="fp-dot green"></span>
+        <span>NASA POWER &amp; Open-Meteo Satellite Stack</span>
+      </div>
+    </div>
+
+    <!-- External Resource Links -->
     <div class="ft-links">
-      <a href="https://open-meteo.com" target="_blank">Open-Meteo</a>
-      <a href="https://power.larc.nasa.gov" target="_blank">NASA POWER</a>
-      <a href="https://pvlib-python.readthedocs.io" target="_blank">pvlib</a>
-      <a href="https://www.kaggle.com/datasets/dronio/SolarEnergy" target="_blank">Kaggle Dataset</a>
+      <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer" class="ft-link-btn">
+        <span>Open-Meteo API</span>
+        <span class="ext-arrow">↗</span>
+      </a>
+      <a href="https://power.larc.nasa.gov" target="_blank" rel="noopener noreferrer" class="ft-link-btn">
+        <span>NASA POWER</span>
+        <span class="ext-arrow">↗</span>
+      </a>
+      <a href="https://pvlib-python.readthedocs.io" target="_blank" rel="noopener noreferrer" class="ft-link-btn">
+        <span>pvlib Python</span>
+        <span class="ext-arrow">↗</span>
+      </a>
+      <a href="https://www.kaggle.com/datasets/dronio/SolarEnergy" target="_blank" rel="noopener noreferrer" class="ft-link-btn">
+        <span>Kaggle Dataset (32K+)</span>
+        <span class="ext-arrow">↗</span>
+      </a>
+      <a href="https://github.com/mvishnunaidu/SolarNet_Pro.git" target="_blank" rel="noopener noreferrer" class="ft-link-btn">
+        <span>GitHub Repository</span>
+        <span class="ext-arrow">↗</span>
+      </a>
     </div>
-    <div class="ft-college">
-      SolarNet Pro · Machine Learning Engineering Suite &nbsp;·&nbsp; <span class="gold">Production Deployment</span>
+
+    <div class="ft-divider"></div>
+
+    <div class="ft-bottom-row">
+      <div class="ft-copy">
+        &copy; 2026 SolarNet Pro &middot; Advanced Meteorological AI &amp; Solar Irradiance Forecasting
+      </div>
+      <div class="ft-version">
+        Machine Learning Engineering Suite &nbsp;&middot;&nbsp; <span class="cyan">Active Enterprise System</span>
+      </div>
     </div>
   </footer>
 
