@@ -63,7 +63,7 @@
     }
   </style>
 </head>
-<body class="theme-light-mode">
+<body>
 
 <!-- Ambient background glows -->
 <div class="glow g1"></div>
@@ -149,16 +149,8 @@
           </svg>
         </button>
       </div>
-      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Half Sun active — Click for Low Light">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="2" y1="18" x2="22" y2="18"></line>
-          <path d="M6 18a6 6 0 0 1 12 0" fill="#FBBF24" stroke="#F59E0B"></path>
-          <line x1="12" y1="4" x2="12" y2="7"></line>
-          <line x1="4.93" y1="10.93" x2="7.05" y2="13.05"></line>
-          <line x1="19.07" y1="10.93" x2="16.95" y2="13.05"></line>
-          <line x1="2" y1="14" x2="5" y2="14"></line>
-          <line x1="19" y1="14" x2="22" y2="14"></line>
-        </svg>
+      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Atmospheric Lighting">
+        ☀️
       </button>
     </div>
   </header>
@@ -762,20 +754,15 @@
   </div>
 
   <!-- ══════════════════════ FOOTER ══════════════════════ -->
-  <footer id="about-section" class="modern-footer">
-    <div class="ft-top-row">
-      <div class="ft-brand">
-        <div class="ft-brand-title">
-          <span class="ft-sun-icon">☀️</span>
-          <span class="ft-brand-name">Solar<span class="acc">Net</span></span>
-          <span class="pro-badge">PRO</span>
-        </div>
-        <p class="ft-tagline">AI-Powered Solar Radiation &amp; Renewable Energy Intelligence Suite</p>
-      </div>
-      <div class="ft-status-badge">
-        <span class="ft-status-dot"></span>
-        <span>Dual Ensemble Active (RF + XGBoost)</span>
-      </div>
+  <footer id="about-section">
+    <div class="ft-logo">
+      <span class="ft-sun-icon">☀️</span>
+      <span class="ft-brand-name">Solar<span class="acc">Net</span></span>
+      <span class="pro-badge">PRO</span>
+    </div>
+    
+    <div class="ft-desc">
+      Applied Machine Learning System &middot; Random Forest + XGBoost &middot; pvlib Solar Geometry &middot; Open-Meteo &amp; NASA POWER
     </div>
 
     <!-- Tech Stack Capsule Pills -->
@@ -794,7 +781,7 @@
       </div>
       <div class="ft-tech-pill">
         <span class="fp-dot green"></span>
-        <span>NASA POWER &amp; Open-Meteo Satellite Stack</span>
+        <span>NASA POWER Satellite Stack</span>
       </div>
     </div>
 
@@ -822,19 +809,12 @@
       </a>
     </div>
 
-    <div class="ft-divider"></div>
-
-    <div class="ft-bottom-row">
-      <div class="ft-copy">
-        &copy; 2026 SolarNet Pro &middot; Advanced Meteorological AI &amp; Solar Irradiance Forecasting
-      </div>
-      <div class="ft-version">
-        Machine Learning Engineering Suite &nbsp;&middot;&nbsp; <span class="cyan">Active Enterprise System</span>
-      </div>
+    <div class="ft-college">
+      SolarNet Pro &middot; Machine Learning Engineering Suite &nbsp;&middot;&nbsp; <span class="cyan">Active Enterprise System</span>
     </div>
   </footer>
 
 </div>
-<script src="/static/js/app.js?v=28"></script>
+<script src="/static/js/app.js?v=27"></script>
 </body>
 </html>
