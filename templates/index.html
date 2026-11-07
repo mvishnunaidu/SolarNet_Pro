@@ -17,7 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="/static/css/style.css?v=38"/>
+  <link rel="stylesheet" href="/static/css/style.css?v=39"/>
   <style>
     .leaflet-control-attribution{display:none}
     .leaflet-control-zoom a{background:rgba(30,41,59,.95)!important;color:#F59E0B!important;border-color:rgba(245,158,11,.3)!important}
@@ -32,7 +32,7 @@
       gap: 20px;
     }
     @media (max-width: 860px) {
-      .simple-setup-grid { grid-template-columns: 1fr; }
+      .simple-setup-grid { grid-template-columns: 1fr; gap: 14px; }
     }
     .stat-pill-row {
       display: grid;
@@ -40,12 +40,31 @@
       gap: 12px;
       margin-top: 16px;
     }
+    @media (max-width: 640px) {
+      .stat-pill-row {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
+      }
+    }
     .stat-pill {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 10px;
       padding: 12px;
       text-align: center;
+    }
+    @media (max-width: 640px) {
+      .stat-pill {
+        padding: 8px 4px !important;
+        border-radius: 8px !important;
+      }
+      .stat-pill-lbl {
+        font-size: 0.54rem !important;
+        margin-bottom: 2px !important;
+      }
+      .stat-pill-val {
+        font-size: 0.95rem !important;
+      }
     }
     .stat-pill-lbl {
       font-family: 'Space Mono', monospace;
@@ -118,12 +137,12 @@
 
     <!-- Center Navigation Links -->
     <nav class="top-nav" id="top-nav">
-      <a href="#home" class="nav-link active">Home</a>
-      <a href="#prediction-section" class="nav-link">Prediction</a>
-      <a href="#forecast-section" class="nav-link">Forecast</a>
-      <a href="#models-section" class="nav-link">Models</a>
-      <a href="#analytics-section" class="nav-link">Analytics</a>
-      <a href="#about-section" class="nav-link">About</a>
+      <a href="#home" class="nav-link active" onclick="closeMobileNav()">Home</a>
+      <a href="#prediction-section" class="nav-link" onclick="closeMobileNav()">Prediction</a>
+      <a href="#forecast-section" class="nav-link" onclick="closeMobileNav()">Forecast</a>
+      <a href="#models-section" class="nav-link" onclick="closeMobileNav()">Models</a>
+      <a href="#analytics-section" class="nav-link" onclick="closeMobileNav()">Analytics</a>
+      <a href="#about-section" class="nav-link" onclick="closeMobileNav()">About</a>
     </nav>
 
     <div class="hdr-right">
@@ -151,6 +170,11 @@
       </div>
       <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Atmospheric Lighting">
         ☀️
+      </button>
+      <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation menu" onclick="toggleMobileNav()">
+        <span class="mnt-bar"></span>
+        <span class="mnt-bar"></span>
+        <span class="mnt-bar"></span>
       </button>
     </div>
   </header>
@@ -233,7 +257,7 @@
       <div class="cb-input-container">
         <span class="cb-pin">📍</span>
         <input class="cb-input-box" type="text" id="city-input" onclick="this.select()"
-               placeholder="Enter a city (e.g., Tirupati, Bengaluru, Hyderabad)" value=""/>
+               placeholder="Enter a city (e.g., Tirupati, Bengaluru, Hyderabad)" value="" inputmode="search" autocomplete="off"/>
       </div>
       <button class="btn-fetch-accent" id="city-btn" onclick="fetchCity()">
         ☁️ Fetch Weather
@@ -313,31 +337,31 @@
       <div class="form-grid">
         <div class="field">
           <label>TEMPERATURE (°F)</label>
-          <input type="number" id="temperature" value="" placeholder="e.g. 78.5" step="0.1" onclick="this.select()"/>
+          <input type="number" id="temperature" value="" placeholder="e.g. 78.5" step="0.1" inputmode="decimal" onclick="this.select()"/>
         </div>
         <div class="field">
           <label>PRESSURE (inHg)</label>
-          <input type="number" id="pressure" value="" placeholder="e.g. 29.85" step="0.01" onclick="this.select()"/>
+          <input type="number" id="pressure" value="" placeholder="e.g. 29.85" step="0.01" inputmode="decimal" onclick="this.select()"/>
         </div>
         <div class="field">
           <label>HUMIDITY (%)</label>
-          <input type="number" id="humidity" value="" placeholder="e.g. 55" min="0" max="100" onclick="this.select()"/>
+          <input type="number" id="humidity" value="" placeholder="e.g. 55" min="0" max="100" inputmode="numeric" onclick="this.select()"/>
         </div>
         <div class="field">
           <label>WIND DIR (°)</label>
-          <input type="number" id="wind_dir" value="" placeholder="e.g. 180" min="0" max="360" onclick="this.select()"/>
+          <input type="number" id="wind_dir" value="" placeholder="e.g. 180" min="0" max="360" inputmode="numeric" onclick="this.select()"/>
         </div>
         <div class="field">
           <label>WIND SPEED (mph)</label>
-          <input type="number" id="speed" value="" placeholder="e.g. 8.2" step="0.1" onclick="this.select()"/>
+          <input type="number" id="speed" value="" placeholder="e.g. 8.2" step="0.1" inputmode="decimal" onclick="this.select()"/>
         </div>
         <div class="field">
           <label>HOUR (0–23)</label>
-          <input type="number" id="hour" value="" placeholder="e.g. 12" min="0" max="23" onclick="this.select()"/>
+          <input type="number" id="hour" value="" placeholder="e.g. 12" min="0" max="23" inputmode="numeric" onclick="this.select()"/>
         </div>
         <div class="field">
           <label>DAY OF MONTH</label>
-          <input type="number" id="day" value="" placeholder="e.g. 15" min="1" max="31" onclick="this.select()"/>
+          <input type="number" id="day" value="" placeholder="e.g. 15" min="1" max="31" inputmode="numeric" onclick="this.select()"/>
         </div>
         <div class="field">
           <label>MONTH</label>
@@ -463,11 +487,11 @@
       <div class="loc-row">
         <div class="field" style="max-width:130px">
           <label>LATITUDE</label>
-          <input type="number" id="lat" value="" placeholder="e.g. 13.6288" step="0.0001" onclick="this.select()"/>
+          <input type="number" id="lat" value="" placeholder="e.g. 13.6288" step="0.0001" inputmode="decimal" onclick="this.select()"/>
         </div>
         <div class="field" style="max-width:130px">
           <label>LONGITUDE</label>
-          <input type="number" id="lon" value="" placeholder="e.g. 79.4192" step="0.0001" onclick="this.select()"/>
+          <input type="number" id="lon" value="" placeholder="e.g. 79.4192" step="0.0001" inputmode="decimal" onclick="this.select()"/>
         </div>
         <input type="hidden" id="panel_tilt" value="20"/>
         <input type="hidden" id="panel_azimuth" value="180"/>
@@ -815,6 +839,6 @@
   </footer>
 
 </div>
-<script src="/static/js/app.js?v=27"></script>
+<script src="/static/js/app.js?v=28"></script>
 </body>
 </html>

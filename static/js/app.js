@@ -773,7 +773,7 @@ function buildChart(labels, poa, ghi, nasa) {
       },
       scales: {
         x: {
-          ticks: { color: '#64748B', font: { family: 'Space Mono', size: 9 }, maxRotation: 45 },
+          ticks: { color: '#64748B', font: { family: 'Space Mono', size: 9 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 8 },
           grid:  { color: 'rgba(255,255,255,0.04)' }
         },
         y: {
@@ -1696,7 +1696,7 @@ function renderUsageChart(labels, solarKw, loadKw, directKw, battChgKw, battDisK
       },
       scales: {
         x: {
-          ticks: { color: '#64748B', font: { family: 'Space Mono', size: 9 } },
+          ticks: { color: '#64748B', font: { family: 'Space Mono', size: 9 }, autoSkip: true, maxTicksLimit: 8 },
           grid:  { color: 'rgba(255,255,255,0.04)' }
         },
         y: {
@@ -1872,7 +1872,7 @@ function renderCashflowChart(labels, data) {
       },
       scales: {
         x: {
-          ticks: { color: '#64748B', font: { family: 'Space Mono', size: 9 } },
+          ticks: { color: '#64748B', font: { family: 'Space Mono', size: 9 }, autoSkip: true, maxTicksLimit: 8 },
           grid:  { color: 'rgba(255,255,255,0.04)' }
         },
         y: {
@@ -2091,7 +2091,7 @@ function renderSimpleUsageChart(labels, solarGen, homeLoad) {
       },
       scales: {
         x: {
-          ticks: { color: '#64748B', font: { family: 'Space Mono', size: 9 } },
+          ticks: { color: '#64748B', font: { family: 'Space Mono', size: 9 }, autoSkip: true, maxTicksLimit: 8 },
           grid:  { color: 'rgba(255,255,255,0.04)' }
         },
         y: {
@@ -2133,6 +2133,37 @@ function initNavScrollSpy() {
     });
   }, { passive: true });
 }
+
+/* ── Mobile Navigation Toggle ──────────────────────────────── */
+function toggleMobileNav() {
+  const nav = el('top-nav');
+  const btn = el('mobile-nav-toggle');
+  const hdr = document.querySelector('header');
+  if (!nav) return;
+  const isOpen = nav.classList.toggle('nav-open');
+  if (btn) btn.classList.toggle('active', isOpen);
+  if (hdr) hdr.classList.toggle('menu-active', isOpen);
+}
+
+function closeMobileNav() {
+  const nav = el('top-nav');
+  const btn = el('mobile-nav-toggle');
+  const hdr = document.querySelector('header');
+  if (nav) nav.classList.remove('nav-open');
+  if (btn) btn.classList.remove('active');
+  if (hdr) hdr.classList.remove('menu-active');
+}
+
+// Close mobile nav on outside click or escape
+document.addEventListener('click', (e) => {
+  const hdr = document.querySelector('header');
+  if (hdr && !hdr.contains(e.target)) {
+    closeMobileNav();
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeMobileNav();
+});
 
 /* ── Atmospheric Theme Toggle ──────────────────────────────── */
 let isAtmosphericLight = false;
