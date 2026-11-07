@@ -128,6 +128,8 @@ body.theme-light-mode .city-bar-wrap {
 .cyan   { color: var(--cyan); }
 .violet { color: var(--violet); }
 .green  { color: var(--green); }
+.rose   { color: #FB7185; }
+.coral  { color: #FB7185; }
 
 /* ══ Ambient Glow Background ══ */
 @keyframes aurora-float {
@@ -663,6 +665,12 @@ header {
 }
 .hsp-icon svg { width: 19px; height: 19px; }
 .hsp-icon-gold   { background: rgba(251, 191, 36, 0.12); color: #FBBF24; box-shadow: 0 0 14px rgba(251, 191, 36, 0.2); }
+.hsp-icon-rose, .hsp-icon-coral {
+  background: rgba(244, 63, 94, 0.14);
+  border: 1px solid rgba(251, 113, 133, 0.35);
+  color: #FB7185;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.25);
+}
 .hsp-icon-violet { background: rgba(124, 58, 237, 0.15); color: #A78BFA; box-shadow: 0 0 14px rgba(124, 58, 237, 0.2); }
 .hsp-icon-cyan   { background: rgba(14, 165, 233, 0.12); color: #38BDF8; box-shadow: 0 0 14px rgba(14, 165, 233, 0.2); }
 .hsp-icon-green  { background: rgba(16, 185, 129, 0.12); color: #34D399; box-shadow: 0 0 14px rgba(16, 185, 129, 0.2); }
@@ -677,6 +685,10 @@ header {
   font-weight: 800;
   line-height: 1;
 }
+.hsp-val.gold   { color: #FBBF24; text-shadow: 0 0 14px rgba(251, 191, 36, 0.45); }
+.hsp-val.rose, .hsp-val.coral { color: #FB7185; text-shadow: 0 0 14px rgba(251, 113, 133, 0.45); }
+.hsp-val.cyan   { color: #38BDF8; text-shadow: 0 0 14px rgba(56, 189, 248, 0.45); }
+.hsp-val.green  { color: #34D399; text-shadow: 0 0 14px rgba(52, 211, 153, 0.45); }
 .hsp-lbl {
   font-size: 0.60rem;
   color: #94A3B8;
